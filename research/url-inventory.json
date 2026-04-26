@@ -1,0 +1,681 @@
+{
+  "canon": {
+    "beys": [
+      {
+        "url": "https://beyblade.fandom.com/wiki/PhoenixFeather_3-60F",
+        "slug": "PhoenixFeather_3-60F"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/PhoenixWing_9-60GF",
+        "slug": "PhoenixWing_9-60GF"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/BulletGriffon_H",
+        "slug": "BulletGriffon_H"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/SilverWolf_3-80FB",
+        "slug": "SilverWolf_3-80FB"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/WizardArrow_4-80B",
+        "slug": "WizardArrow_4-80B"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/UnicornDelta_PO3-60GU",
+        "slug": "UnicornDelta_PO3-60GU"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/OrochiCluster_6-60LF",
+        "slug": "OrochiCluster_6-60LF"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/HellsScythe_4-60T",
+        "slug": "HellsScythe_4-60T"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/CobaltDrake_4-60F",
+        "slug": "CobaltDrake_4-60F"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/RagnaRage_FE4-55Y",
+        "slug": "RagnaRage_FE4-55Y"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/HellsHammer_3-70H",
+        "slug": "HellsHammer_3-70H"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/DranStrike_4-50FF",
+        "slug": "DranStrike_4-50FF"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/DranSword_3-60F",
+        "slug": "DranSword_3-60F"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/AeroPegasus_3-70A",
+        "slug": "AeroPegasus_3-70A"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/MammothTusk_7-60S",
+        "slug": "MammothTusk_7-60S"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/SharkEdge_4-80N",
+        "slug": "SharkEdge_4-80N"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/ImpactDrake_9-60LR",
+        "slug": "ImpactDrake_9-60LR"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/HellsReaper_T4-70K",
+        "slug": "HellsReaper_T4-70K"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/SamuraiSaber_2-70L",
+        "slug": "SamuraiSaber_2-70L"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/DranzerSpiral_3-80T",
+        "slug": "DranzerSpiral_3-80T"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/SharkEdge_3-60LF",
+        "slug": "SharkEdge_3-60LF"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/CobaltDragoon_2-60C",
+        "slug": "CobaltDragoon_2-60C"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/MeteorDragoon_3-70J",
+        "slug": "MeteorDragoon_3-70J"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/DranBuster_1-60A",
+        "slug": "DranBuster_1-60A"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/KnightLance_4-80HN",
+        "slug": "KnightLance_4-80HN"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/ValkyrieVolt_S4-70V",
+        "slug": "ValkyrieVolt_S4-70V"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/SolEclipse_D5-70TK",
+        "slug": "SolEclipse_D5-70TK"
+      }
+    ],
+    "parts": [
+      {
+        "url": "https://beyblade.fandom.com/wiki/Bit_-_Flat",
+        "slug": "Bit_-_Flat"
+      }
+    ],
+    "characters": [
+      {
+        "url": "https://beyblade.fandom.com/wiki/Jaxon_Cross",
+        "slug": "Jaxon_Cross"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Nine_Kurosu",
+        "slug": "Nine_Kurosu"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Gigatani",
+        "slug": "Gigatani"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Zero_Kurosu",
+        "slug": "Zero_Kurosu"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Packun",
+        "slug": "Packun"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Tenka_Shiroboshi",
+        "slug": "Tenka_Shiroboshi"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Omega_Shiroboshi",
+        "slug": "Omega_Shiroboshi"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/One_Kurosu",
+        "slug": "One_Kurosu"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Ginro",
+        "slug": "Ginro"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Robin_Kazami",
+        "slug": "Robin_Kazami"
+      }
+    ],
+    "teams": [
+      {
+        "url": "https://beyblade.fandom.com/wiki/Phalanx",
+        "slug": "Phalanx"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Future_Pros",
+        "slug": "Future_Pros"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Cross_Corporation",
+        "slug": "Cross_Corporation"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Pendragon",
+        "slug": "Pendragon"
+      }
+    ],
+    "locations": [
+      {
+        "url": "https://beyblade.fandom.com/wiki/The_X",
+        "slug": "The_X"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Beyblade_City",
+        "slug": "Beyblade_City"
+      }
+    ],
+    "episodes": [
+      {
+        "url": "https://beyblade.fandom.com/wiki/Beyblade_X_(Season_1)",
+        "slug": "Beyblade_X_(Season_1)"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Beyblade_X_(Season_3)",
+        "slug": "Beyblade_X_(Season_3)"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Beyblade_X_(Season_2)",
+        "slug": "Beyblade_X_(Season_2)"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/List_of_Beyblade_X_episodes_(Season_3)",
+        "slug": "List_of_Beyblade_X_episodes_(Season_3)"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/List_of_Beyblade_X_chapters",
+        "slug": "List_of_Beyblade_X_chapters"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/List_of_Beyblade_X_episodes_(Season_1)",
+        "slug": "List_of_Beyblade_X_episodes_(Season_1)"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Beyblade_X_-_Episode_124",
+        "slug": "Beyblade_X_-_Episode_124"
+      }
+    ],
+    "terms": [
+      {
+        "url": "https://beyblade.fandom.com/wiki/X-Over_Project",
+        "slug": "X-Over_Project"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Xtreme_Dash",
+        "slug": "Xtreme_Dash"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Hall_of_Fame_(Beyblade_X)",
+        "slug": "Hall_of_Fame_(Beyblade_X)"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Unique_Line",
+        "slug": "Unique_Line"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Custom_Line",
+        "slug": "Custom_Line"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Type",
+        "slug": "Type"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Basic_Line",
+        "slug": "Basic_Line"
+      }
+    ],
+    "items": [
+      {
+        "url": "https://beyblade.fandom.com/wiki/Random_Booster_FoxBrush_Select",
+        "slug": "Random_Booster_FoxBrush_Select"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Beyblade_X:_Xone",
+        "slug": "Beyblade_X:_Xone"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/List_of_Beyblade_X_products_(Takara_Tomy)",
+        "slug": "List_of_Beyblade_X_products_(Takara_Tomy)"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Beyblade_X_App",
+        "slug": "Beyblade_X_App"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Beyblade_X:_EvoBattle",
+        "slug": "Beyblade_X:_EvoBattle"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/X-treme_Expansion_Pack",
+        "slug": "X-treme_Expansion_Pack"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Beyblade_X_Bundle_Pack",
+        "slug": "Beyblade_X_Bundle_Pack"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/String_Launcher_(Beyblade_X)",
+        "slug": "String_Launcher_(Beyblade_X)"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/List_of_Beyblade_X_products_(Hasbro)",
+        "slug": "List_of_Beyblade_X_products_(Hasbro)"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Beyblade_X_(app)",
+        "slug": "Beyblade_X_(app)"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/List_of_Beyblade_Customs_in_Beyblade_X",
+        "slug": "List_of_Beyblade_Customs_in_Beyblade_X"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/List_of_Generic_Beyblades_in_Beyblade_X",
+        "slug": "List_of_Generic_Beyblades_in_Beyblade_X"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Customize_Set_U",
+        "slug": "Customize_Set_U"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Bumblebee_and_Shockwave_Multipack_Set",
+        "slug": "Bumblebee_and_Shockwave_Multipack_Set"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._8",
+        "slug": "Random_Booster_Vol._8"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._9",
+        "slug": "Random_Booster_Vol._9"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._6",
+        "slug": "Random_Booster_Vol._6"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._5",
+        "slug": "Random_Booster_Vol._5"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._4",
+        "slug": "Random_Booster_Vol._4"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._7",
+        "slug": "Random_Booster_Vol._7"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/List_of_Basic_Line_parts",
+        "slug": "List_of_Basic_Line_parts"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Beyblade_25th_Anniversary_Set",
+        "slug": "Beyblade_25th_Anniversary_Set"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Random_Booster_ShinobiShadow_Select",
+        "slug": "Random_Booster_ShinobiShadow_Select"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Evangelion_Deck_Set",
+        "slug": "Evangelion_Deck_Set"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/3on3_Deck_Set",
+        "slug": "3on3_Deck_Set"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/SharkScale_Deck_Set",
+        "slug": "SharkScale_Deck_Set"
+      },
+      {
+        "url": "https://beyblade.fandom.com/wiki/Battle_Entry_Set",
+        "slug": "Battle_Entry_Set"
+      }
+    ],
+    "uncategorized": [
+      {
+        "url": "https://beyblade.fandom.com/wiki/Dreams",
+        "slug": "Dreams"
+      }
+    ]
+  },
+  "fanon": {
+    "beys": [],
+    "parts": [],
+    "characters": [
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Robin_Kazami_(Destined)",
+        "slug": "Robin_Kazami_(Destined)"
+      }
+    ],
+    "teams": [],
+    "locations": [],
+    "episodes": [
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/The_X_We_Promised_(Season_2)",
+        "slug": "The_X_We_Promised_(Season_2)"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Beyblade_Generation_X_(Season_3)",
+        "slug": "Beyblade_Generation_X_(Season_3)"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Beyblade_Generation_X_(Season_2)",
+        "slug": "Beyblade_Generation_X_(Season_2)"
+      }
+    ],
+    "terms": [],
+    "items": [
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Beyblade_X:_Next_Generation",
+        "slug": "Beyblade_X:_Next_Generation"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Beyblade_X:_X-Over",
+        "slug": "Beyblade_X:_X-Over"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Beyblade_X:_Climax_Legends_(Toyline)",
+        "slug": "Beyblade_X:_Climax_Legends_(Toyline)"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Beyblade_X:_Xtreme_Thunder",
+        "slug": "Beyblade_X:_Xtreme_Thunder"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Beyblade_X:_The_Rebellion",
+        "slug": "Beyblade_X:_The_Rebellion"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Beyblade_X:_Lights,_Camera,_Action!",
+        "slug": "Beyblade_X:_Lights,_Camera,_Action!"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Beyblade_X:_AU",
+        "slug": "Beyblade_X:_AU"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Beyblade_X:_Real-World_Chronicles,_Part_2",
+        "slug": "Beyblade_X:_Real-World_Chronicles,_Part_2"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Beyblade_X:_Virtual",
+        "slug": "Beyblade_X:_Virtual"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Beyblade_X:_The_Great_Beyblade_War",
+        "slug": "Beyblade_X:_The_Great_Beyblade_War"
+      }
+    ],
+    "uncategorized": [
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Chain_Kerbeus_Fortress_Yard%27-6_(Burst_Expanded_Universe)",
+        "slug": "Chain_Kerbeus_Fortress_Yard'-6_(Burst_Expanded_Universe)"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Beyblade_Generation_X",
+        "slug": "Beyblade_Generation_X"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Beyblade_X_Chronicles",
+        "slug": "Beyblade_X_Chronicles"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Beyblade_X_Rectified:_The_First_Part",
+        "slug": "Beyblade_X_Rectified:_The_First_Part"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Academies/Universities_(Beyblade_X)",
+        "slug": "Academies/Universities_(Beyblade_X)"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Beyblade_X_Infinite_Guide",
+        "slug": "Beyblade_X_Infinite_Guide"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Beyblade_X-Fury",
+        "slug": "Beyblade_X-Fury"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Beyblade_X_Despair",
+        "slug": "Beyblade_X_Despair"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Character_Birthdays_(Beyblade_X)",
+        "slug": "Character_Birthdays_(Beyblade_X)"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Beyblade_X_Pulse",
+        "slug": "Beyblade_X_Pulse"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Beyblade_X-Force_toyline",
+        "slug": "Beyblade_X-Force_toyline"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Beyblade_X_Query",
+        "slug": "Beyblade_X_Query"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Beyblade_X_Demon",
+        "slug": "Beyblade_X_Demon"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Beyblade_Exalted",
+        "slug": "Beyblade_Exalted"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Beyblade_X_Academia",
+        "slug": "Beyblade_X_Academia"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Beyblade_X_Delusion",
+        "slug": "Beyblade_X_Delusion"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Beyblade_X_Infinite",
+        "slug": "Beyblade_X_Infinite"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Jack-O",
+        "slug": "Jack-O"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Divina",
+        "slug": "Divina"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Bc_Sol",
+        "slug": "Bc_Sol"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Natsuki_Kikuchi",
+        "slug": "Natsuki_Kikuchi"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Cretaceous",
+        "slug": "Cretaceous"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Yarina_Kisai",
+        "slug": "Yarina_Kisai"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Rose_Fyodori",
+        "slug": "Rose_Fyodori"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Seishuku_Hazuki",
+        "slug": "Seishuku_Hazuki"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Reta_Shirabe",
+        "slug": "Reta_Shirabe"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Alvin_Kazami",
+        "slug": "Alvin_Kazami"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Alya_Cross",
+        "slug": "Alya_Cross"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Noa_Miyakubi",
+        "slug": "Noa_Miyakubi"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Noble_Athena_Focus_Omni-16",
+        "slug": "Noble_Athena_Focus_Omni-16"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Beyblade:_Burstverse:_Quadstrike",
+        "slug": "Beyblade:_Burstverse:_Quadstrike"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Shigure_Kurogiri",
+        "slug": "Shigure_Kurogiri"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Kyomii_Agawa",
+        "slug": "Kyomii_Agawa"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Billow_Trispear_Tapered_Bearing%27-6",
+        "slug": "Billow_Trispear_Tapered_Bearing'-6"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Hostile_Salamander_Karma_Offset%27-12",
+        "slug": "Hostile_Salamander_Karma_Offset'-12"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Voyager_Cepheus_Surround_Facet-12",
+        "slug": "Voyager_Cepheus_Surround_Facet-12"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Ishikawa_Sayaka",
+        "slug": "Ishikawa_Sayaka"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Berserk_Linwyrm_Deviate_Kinetic-11",
+        "slug": "Berserk_Linwyrm_Deviate_Kinetic-11"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Lisa_Satsuki",
+        "slug": "Lisa_Satsuki"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Hina_Kaisato",
+        "slug": "Hina_Kaisato"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Lily_Yamitoki/_Gallery",
+        "slug": "Lily_Yamitoki/_Gallery"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Beyblade_Burst_Densetsu",
+        "slug": "Beyblade_Burst_Densetsu"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Deizu_Fujiwara",
+        "slug": "Deizu_Fujiwara"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Luka_Zalewska",
+        "slug": "Luka_Zalewska"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Mira_Kokagi",
+        "slug": "Mira_Kokagi"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Akane_Otori",
+        "slug": "Akane_Otori"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Ethan_Nishiro",
+        "slug": "Ethan_Nishiro"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Ragnar%C3%B6k",
+        "slug": "Ragnarök"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Promising_Pandora_Illegal_Metal_Omni-0",
+        "slug": "Promising_Pandora_Illegal_Metal_Omni-0"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Ayuna",
+        "slug": "Ayuna"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Training_beyblade",
+        "slug": "Training_beyblade"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Mystique",
+        "slug": "Mystique"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Iyano_Yuuma",
+        "slug": "Iyano_Yuuma"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Thoma_Seino",
+        "slug": "Thoma_Seino"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Diana_Endou",
+        "slug": "Diana_Endou"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Glacia_Hikawa",
+        "slug": "Glacia_Hikawa"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Ember_Nekki",
+        "slug": "Ember_Nekki"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Ace_Meister",
+        "slug": "Ace_Meister"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Hana_Park",
+        "slug": "Hana_Park"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Kyone",
+        "slug": "Kyone"
+      },
+      {
+        "url": "https://beybladefanon.fandom.com/wiki/Nya_Nishiro",
+        "slug": "Nya_Nishiro"
+      }
+    ]
+  }
+}

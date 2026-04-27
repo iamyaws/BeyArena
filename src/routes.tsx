@@ -4,12 +4,12 @@ import { LogBattleFlow } from './pages/LogBattleFlow';
 import { TowerPage } from './pages/TowerPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { PublicProfilePage } from './pages/PublicProfilePage';
+import { FeedPage } from './pages/FeedPage';
 import { KidRoute } from './components/auth/KidRoute';
 import { AdminRoute } from './components/auth/AdminRoute';
 
 // Placeholders — full pages added in later tasks
 const Home = () => <div className="p-6">Home — coming in Task 49</div>;
-const Feed = () => <div className="p-6">Feed — Task 47</div>;
 const QrLogin = () => <div className="p-6">QR Login — Task 23</div>;
 const Werkstatt = () => <div className="p-6">Werkstatt — Task 52</div>;
 
@@ -52,7 +52,7 @@ export function AppRoutes() {
         path="/feed"
         element={
           <KidRoute>
-            <Feed />
+            <FeedPage />
           </KidRoute>
         }
       />

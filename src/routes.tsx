@@ -1,12 +1,12 @@
 import { Routes, Route } from 'react-router-dom';
 import { AdminLoginPage } from './pages/AdminLoginPage';
 import { LogBattleFlow } from './pages/LogBattleFlow';
+import { TowerPage } from './pages/TowerPage';
 import { KidRoute } from './components/auth/KidRoute';
 import { AdminRoute } from './components/auth/AdminRoute';
 
 // Placeholders — full pages added in later tasks
 const Home = () => <div className="p-6">Home — coming in Task 49</div>;
-const Tower = () => <div className="p-6">Tower — Task 42</div>;
 const Profile = () => <div className="p-6">Profile — Task 44</div>;
 const Feed = () => <div className="p-6">Feed — Task 47</div>;
 const QrLogin = () => <div className="p-6">QR Login — Task 23</div>;
@@ -27,7 +27,7 @@ export function AppRoutes() {
         path="/tower"
         element={
           <KidRoute>
-            <Tower />
+            <TowerPage />
           </KidRoute>
         }
       />

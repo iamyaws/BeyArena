@@ -10,7 +10,8 @@
     "test": "vitest",
     "test:run": "vitest run",
     "lint": "eslint src tests --ext .ts,.tsx --no-error-on-unmatched-pattern",
-    "format": "prettier --write src tests"
+    "format": "prettier --write src tests",
+    "types:supabase": "supabase gen types typescript --db-url \"$SUPABASE_DB_URL\" > src/lib/supabase-types.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.104.1",

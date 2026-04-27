@@ -83,12 +83,17 @@ function Stepper({
       <div className="flex items-center gap-2">
         <button
           onClick={() => setValue(Math.max(0, value - 1))}
+          aria-label="Verringern"
           className="w-8 h-8 bg-zinc-700 rounded"
         >
           −
         </button>
         <span className="w-8 text-center font-bold text-xl">{value}</span>
-        <button onClick={() => setValue(value + 1)} className="w-8 h-8 bg-zinc-700 rounded">
+        <button
+          onClick={() => setValue(value + 1)}
+          aria-label="Erhöhen"
+          className="w-8 h-8 bg-zinc-700 rounded"
+        >
           +
         </button>
       </div>

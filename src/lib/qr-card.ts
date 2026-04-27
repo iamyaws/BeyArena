@@ -38,8 +38,14 @@ export type CardInput = {
   teamName?: string | null;
 };
 
-const CARD_W = 252;
-const CARD_H = 360;
+// A6 paper size: 105×148mm. pdf-lib units are pt (72/inch ≈ 2.834646/mm),
+// so 105mm ≈ 297.64pt and 148mm ≈ 419.53pt. Round to whole pt.
+const CARD_W = 298; // A6 width: 105mm × 72/25.4 ≈ 297.64pt
+const CARD_H = 420; // A6 height: 148mm × 72/25.4 ≈ 419.53pt
+// Layout was originally authored against a 252×360 frame (~CR80 trading card).
+// Multiply every absolute pt value (positions, font sizes, paddings, art sizes)
+// by SCALE so the design grows proportionally with the card.
+const SCALE = CARD_W / 252;
 
 // ─────────────────────────────────────────────────────────────
 // Color helpers
@@ -176,7 +182,7 @@ function drawBey(
     color: c1Color,
     borderColor: rgb(0, 0, 0),
     borderOpacity: 0.4,
-    borderWidth: 1.2,
+    borderWidth: 1.2 * (size / 170),
   });
 
   // Hub
@@ -196,7 +202,8 @@ function drawBey(
 function drawCornerPennant(page: PDFPage, hex: string) {
   // Triangle as SVG path. PDF coord origin at top-right corner of card.
   // Height/leg of 44px — same as design. We anchor at top-right (CARD_W, CARD_H).
-  const path = 'M 0 0 L 0 -44 L -44 0 Z';
+  const leg = 44 * SCALE;
+  const path = `M 0 0 L 0 -${leg} L -${leg} 0 Z`;
   page.drawSvgPath(path, {
     x: CARD_W,
     y: CARD_H,
@@ -215,7 +222,7 @@ function drawSpeedLines(page: PDFPage) {
     page.drawLine({
       start: { x: 0, y },
       end: { x: CARD_W, y: y - CARD_H * 0.04 },
-      thickness: 0.5,
+      thickness: 0.5 * SCALE,
       color: rgb(1, 1, 1),
       opacity: 0.06 + (i % 3) * 0.04,
     });
@@ -238,11 +245,11 @@ function drawNameBanner(
   void isLight; // banner text is always near-black per design
   const tone = hexToColor(toneHex);
   // Banner band — oversized so the rotation never exposes the card corners.
-  const bannerYBase = 88; // distance from bottom (mirrors design `bottom: 88`)
-  const bannerH = 38;
-  const bannerW = CARD_W + 24;
+  const bannerYBase = 88 * SCALE; // distance from bottom (mirrors design `bottom: 88`)
+  const bannerH = 38 * SCALE;
+  const bannerW = CARD_W + 24 * SCALE;
   const angleDeg = 2.2;
-  const anchorX = -12;
+  const anchorX = -12 * SCALE;
   const anchorY = bannerYBase;
 
   page.drawRectangle({
@@ -257,10 +264,10 @@ function drawNameBanner(
   // Place text in the rectangle's local frame (anchor = rect origin), then
   // rotate around the same anchor so it follows the banner exactly.
   const upper = name.toUpperCase();
-  const fontSize = 26;
+  const fontSize = 26 * SCALE;
   const textW = fonts.stencil.widthOfTextAtSize(upper, fontSize);
   const localX = bannerW / 2 - textW / 2; // horizontally centered within the banner
-  const localY = 11; // baseline lift inside the band
+  const localY = 11 * SCALE; // baseline lift inside the band
   const rad = (angleDeg * Math.PI) / 180;
   // Apply rotation matrix: (localX, localY) rotated around (anchorX, anchorY).
   const cos = Math.cos(rad);
@@ -288,17 +295,17 @@ function drawTopBand(
   const txt = txtIsDark ? rgb(0.04, 0.04, 0.06) : rgb(1, 1, 1);
   const subtleOpacity = txtIsDark ? 0.55 : 0.85;
   page.drawText('BEYARENA', {
-    x: 12,
-    y: CARD_H - 24,
-    size: 13,
+    x: 12 * SCALE,
+    y: CARD_H - 24 * SCALE,
+    size: 13 * SCALE,
     font: fonts.stencil,
     color: txt,
     opacity: subtleOpacity,
   });
   page.drawText('SPIELERKARTE  S04', {
-    x: 12,
-    y: CARD_H - 35,
-    size: 6.5,
+    x: 12 * SCALE,
+    y: CARD_H - 35 * SCALE,
+    size: 6.5 * SCALE,
     font: fonts.mono,
     color: txt,
     opacity: 0.55,
@@ -306,12 +313,12 @@ function drawTopBand(
 
   // ETG floor pill — top-right
   const pillLabel = `ETG ${floor}`;
-  const pillFontSize = 11;
+  const pillFontSize = 11 * SCALE;
   const pillTextWidth = fonts.stencil.widthOfTextAtSize(pillLabel, pillFontSize);
-  const pillW = pillTextWidth + 14;
-  const pillH = 18;
-  const pillX = CARD_W - 12 - pillW;
-  const pillY = CARD_H - 12 - pillH;
+  const pillW = pillTextWidth + 14 * SCALE;
+  const pillH = 18 * SCALE;
+  const pillX = CARD_W - 12 * SCALE - pillW;
+  const pillY = CARD_H - 12 * SCALE - pillH;
   // pill background contrasts the card color: dark on light cards, light on dark cards
   const pillBg = txtIsDark ? rgb(1, 1, 1) : rgb(0, 0, 0);
   const pillBgOpacity = txtIsDark ? 0.85 : 0.55;
@@ -327,8 +334,8 @@ function drawTopBand(
     opacity: pillBgOpacity,
   });
   page.drawText(pillLabel, {
-    x: pillX + 7,
-    y: pillY + 5,
+    x: pillX + 7 * SCALE,
+    y: pillY + 5 * SCALE,
     size: pillFontSize,
     font: fonts.stencil,
     color: pillTextColor,
@@ -346,25 +353,25 @@ function drawBottomInfoRow(
   const txt = txtIsDark ? rgb(0.04, 0.04, 0.06) : rgb(1, 1, 1);
 
   page.drawText('MEIN BEY', {
-    x: 14,
-    y: 38,
-    size: 6.5,
+    x: 14 * SCALE,
+    y: 38 * SCALE,
+    size: 6.5 * SCALE,
     font: fonts.mono,
     color: txt,
     opacity: 0.6,
   });
   page.drawText(bey.name_en.toUpperCase(), {
-    x: 14,
-    y: 22,
-    size: 12,
+    x: 14 * SCALE,
+    y: 22 * SCALE,
+    size: 12 * SCALE,
     font: fonts.stencil,
     color: txt,
   });
   const codeLine = `${bey.product_code ?? '-'}  ${(bey.type ?? '-').toUpperCase()}`;
   page.drawText(codeLine, {
-    x: 14,
-    y: 12,
-    size: 7.5,
+    x: 14 * SCALE,
+    y: 12 * SCALE,
+    size: 7.5 * SCALE,
     font: fonts.mono,
     color: txt,
     opacity: 0.6,
@@ -373,20 +380,20 @@ function drawBottomInfoRow(
   // Right-aligned: Team
   const teamUpper = teamName.toUpperCase();
   const teamLabel = 'TEAM';
-  const teamLabelWidth = fonts.mono.widthOfTextAtSize(teamLabel, 6.5);
-  const teamWidth = fonts.stencil.widthOfTextAtSize(teamUpper, 12);
+  const teamLabelWidth = fonts.mono.widthOfTextAtSize(teamLabel, 6.5 * SCALE);
+  const teamWidth = fonts.stencil.widthOfTextAtSize(teamUpper, 12 * SCALE);
   page.drawText(teamLabel, {
-    x: CARD_W - 14 - teamLabelWidth,
-    y: 38,
-    size: 6.5,
+    x: CARD_W - 14 * SCALE - teamLabelWidth,
+    y: 38 * SCALE,
+    size: 6.5 * SCALE,
     font: fonts.mono,
     color: txt,
     opacity: 0.6,
   });
   page.drawText(teamUpper, {
-    x: CARD_W - 14 - teamWidth,
-    y: 22,
-    size: 12,
+    x: CARD_W - 14 * SCALE - teamWidth,
+    y: 22 * SCALE,
+    size: 12 * SCALE,
     font: fonts.stencil,
     color: txt,
   });
@@ -447,16 +454,16 @@ async function drawFront(
   }
 
   // Top radial tint in kid color (centered above the top edge)
-  drawRadialTint(page, CARD_W / 2, CARD_H + 20, CARD_W * 0.85, resolvedTone, 0.55);
+  drawRadialTint(page, CARD_W / 2, CARD_H + 20 * SCALE, CARD_W * 0.85, resolvedTone, 0.55);
   // Bottom radial tint in kid color
-  drawRadialTint(page, CARD_W / 2, -10, CARD_W * 0.7, resolvedTone, 0.4);
+  drawRadialTint(page, CARD_W / 2, -10 * SCALE, CARD_W * 0.7, resolvedTone, 0.4);
 
   // Speed lines (subtle motion overlay)
   drawSpeedLines(page);
 
   // Bey art — center, upper-third
   const beyColors = beyArtColors(resolvedTone, input.bey.type);
-  drawBey(page, CARD_W / 2, CARD_H - 150, 170, beyColors.c1, beyColors.c2);
+  drawBey(page, CARD_W / 2, CARD_H - 150 * SCALE, 170 * SCALE, beyColors.c1, beyColors.c2);
 
   // Diagonal name banner
   drawNameBanner(page, fonts, input.kid.display_name, resolvedTone, isLight);
@@ -496,7 +503,7 @@ async function drawBack(
   });
 
   // Top color band (50px from top in design space → from y = CARD_H-50 to CARD_H)
-  const bandH = 50;
+  const bandH = 50 * SCALE;
   page.drawRectangle({
     x: 0,
     y: CARD_H - bandH,
@@ -505,25 +512,25 @@ async function drawBack(
     color: tone,
   });
   page.drawText('BEYARENA', {
-    x: 14,
-    y: CARD_H - 30,
-    size: 14,
+    x: 14 * SCALE,
+    y: CARD_H - 30 * SCALE,
+    size: 14 * SCALE,
     font: fonts.stencil,
     color: bandText,
   });
   const right = 'SPIELERKARTE';
-  const rightW = fonts.monoBold.widthOfTextAtSize(right, 9);
+  const rightW = fonts.monoBold.widthOfTextAtSize(right, 9 * SCALE);
   page.drawText(right, {
-    x: CARD_W - 14 - rightW,
-    y: CARD_H - 28,
-    size: 9,
+    x: CARD_W - 14 * SCALE - rightW,
+    y: CARD_H - 28 * SCALE,
+    size: 9 * SCALE,
     font: fonts.monoBold,
     color: bandText,
   });
 
   // Notch indicator just below the band
-  const notchW = 46;
-  const notchH = 4;
+  const notchW = 46 * SCALE;
+  const notchH = 4 * SCALE;
   page.drawRectangle({
     x: (CARD_W - notchW) / 2,
     y: CARD_H - bandH - notchH,
@@ -534,28 +541,28 @@ async function drawBack(
 
   // Kid name (stencil, 18pt, dark)
   const name = input.kid.display_name.toUpperCase();
-  const nameSize = 18;
+  const nameSize = 18 * SCALE;
   const nameW = fonts.stencil.widthOfTextAtSize(name, nameSize);
   page.drawText(name, {
     x: (CARD_W - nameW) / 2,
-    y: CARD_H - bandH - 32,
+    y: CARD_H - bandH - 32 * SCALE,
     size: nameSize,
     font: fonts.stencil,
     color: ink,
   });
 
   // QR code box: white card with 2px black border + 4px offset shadow.
-  const qrInner = 130;
-  const qrPad = 10;
+  const qrInner = 130 * SCALE;
+  const qrPad = 10 * SCALE;
   const boxSize = qrInner + qrPad * 2;
   const boxX = (CARD_W - boxSize) / 2;
   // box vertical position: below name, leaving room for caption + footer
-  const boxY = 90;
+  const boxY = 90 * SCALE;
 
   // Offset shadow
   page.drawRectangle({
-    x: boxX + 4,
-    y: boxY - 4,
+    x: boxX + 4 * SCALE,
+    y: boxY - 4 * SCALE,
     width: boxSize,
     height: boxSize,
     color: rgb(0.04, 0.04, 0.06),
@@ -569,10 +576,10 @@ async function drawBack(
     color: rgb(0.04, 0.04, 0.06),
   });
   page.drawRectangle({
-    x: boxX + 2,
-    y: boxY + 2,
-    width: boxSize - 4,
-    height: boxSize - 4,
+    x: boxX + 2 * SCALE,
+    y: boxY + 2 * SCALE,
+    width: boxSize - 4 * SCALE,
+    height: boxSize - 4 * SCALE,
     color: rgb(1, 1, 1),
   });
 
@@ -594,11 +601,11 @@ async function drawBack(
 
   // "↑ vors Handy halten ↑" eyebrow
   const caption = '^ VORS HANDY HALTEN ^';
-  const captionW = fonts.mono.widthOfTextAtSize(caption, 8);
+  const captionW = fonts.mono.widthOfTextAtSize(caption, 8 * SCALE);
   page.drawText(caption, {
     x: (CARD_W - captionW) / 2,
-    y: boxY - 18,
-    size: 8,
+    y: boxY - 18 * SCALE,
+    size: 8 * SCALE,
     font: fonts.mono,
     color: ink,
     opacity: 0.6,
@@ -608,27 +615,27 @@ async function drawBack(
   const lostLine1 = 'Verloren? Mama oder Papa fragt';
   const lostLine2 = 'Marc - du bekommst eine neue.';
   page.drawText(lostLine1, {
-    x: 14,
-    y: 36,
-    size: 7.5,
+    x: 14 * SCALE,
+    y: 36 * SCALE,
+    size: 7.5 * SCALE,
     font: fonts.body,
     color: rgb(0.23, 0.23, 0.25),
   });
   page.drawText(lostLine2, {
-    x: 14,
-    y: 26,
-    size: 7.5,
+    x: 14 * SCALE,
+    y: 26 * SCALE,
+    size: 7.5 * SCALE,
     font: fonts.body,
     color: rgb(0.23, 0.23, 0.25),
   });
 
   // Serial right-aligned
   const serialLabel = 'NR.';
-  const serialLabelSize = 7;
+  const serialLabelSize = 7 * SCALE;
   const serialLabelW = fonts.mono.widthOfTextAtSize(serialLabel, serialLabelSize);
   page.drawText(serialLabel, {
-    x: CARD_W - 14 - serialLabelW,
-    y: 36,
+    x: CARD_W - 14 * SCALE - serialLabelW,
+    y: 36 * SCALE,
     size: serialLabelSize,
     font: fonts.mono,
     color: ink,
@@ -637,11 +644,11 @@ async function drawBack(
   // Serial number derived from the kid id (first 4 hex chars uppercased)
   const idShort = (input.kid.id || '').replace(/-/g, '').slice(0, 4).toUpperCase().padStart(4, '0');
   const serial = `${idShort}-S04`;
-  const serialSize = 9;
+  const serialSize = 9 * SCALE;
   const serialW = fonts.monoBold.widthOfTextAtSize(serial, serialSize);
   page.drawText(serial, {
-    x: CARD_W - 14 - serialW,
-    y: 24,
+    x: CARD_W - 14 * SCALE - serialW,
+    y: 24 * SCALE,
     size: serialSize,
     font: fonts.monoBold,
     color: ink,

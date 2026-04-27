@@ -10,6 +10,7 @@ import { KidRoute } from './components/auth/KidRoute';
 import { AdminRoute } from './components/auth/AdminRoute';
 import { WerkstattLayout } from './pages/werkstatt/WerkstattLayout';
 import { KidsListPage } from './pages/werkstatt/KidsListPage';
+import { CreateKidPage } from './pages/werkstatt/CreateKidPage';
 
 // Placeholders — full pages added in later tasks
 const QrLogin = () => <div className="p-6">QR Login — Task 23</div>;
@@ -76,7 +77,8 @@ export function AppRoutes() {
         }
       >
         <Route index element={<KidsListPage />} />
-        {/* sub-routes added in Tasks 41, 42 */}
+        <Route path="new" element={<CreateKidPage />} />
+        {/* disputes route added in Task 42 */}
       </Route>
     </Routes>
   );

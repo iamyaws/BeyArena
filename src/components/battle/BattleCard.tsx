@@ -1,41 +1,78 @@
-// src/components/battle/BattleCard.tsx
+// BattleCard — single battle row in the feed.
+// Restyled with bx-card + status-tinted left border + bx-display score.
+
 import { useState } from 'react';
 import type { Battle } from '../../lib/types';
 import { useKidById } from '../../hooks/useKid';
+import { Avatar } from '../ui/Avatar';
 import { DisputeSheet } from './DisputeSheet';
+
+const STATUS_COLOR: Record<Battle['status'], string> = {
+  pending: '#FDE047',
+  confirmed: '#22c55e',
+  voided: '#DC2626',
+};
+
+const STATUS_LABEL: Record<Battle['status'], string> = {
+  pending: 'wartet',
+  confirmed: 'bestätigt',
+  voided: 'gestrichen',
+};
 
 export function BattleCard({ b }: { b: Battle }) {
   const [showDispute, setShowDispute] = useState(false);
   const { data: w } = useKidById(b.winner_kid_id);
   const { data: l } = useKidById(b.loser_kid_id);
   if (!w || !l) return null;
-  const border =
-    b.status === 'pending'
-      ? 'border-l-bx-yellow'
-      : b.status === 'confirmed'
-        ? 'border-l-green-500'
-        : 'border-l-red-500 opacity-60';
+
+  const accent = STATUS_COLOR[b.status];
 
   return (
-    <div className={`p-3 bg-zinc-900 rounded border-l-4 ${border} mb-2`}>
-      <div className="text-sm">
-        <strong>{w.display_name}</strong> besiegt <strong>{l.display_name}</strong>{' '}
-        {b.winner_score}-{b.loser_score}
+    <div
+      className="bx-card mb-2"
+      style={{
+        padding: 12,
+        borderLeft: `3px solid ${accent}`,
+        opacity: b.status === 'voided' ? 0.6 : 1,
+      }}
+    >
+      <div className="flex items-center gap-3">
+        <Avatar kid={w} size={36} />
+        <div className="flex-1">
+          <div style={{ fontSize: 13, fontWeight: 600 }}>
+            <strong>{w.display_name}</strong>{' '}
+            <span style={{ color: 'var(--bx-mute)' }}>besiegt</span>{' '}
+            <strong>{l.display_name}</strong>
+          </div>
+          <div className="bx-mono mt-0.5 flex items-center gap-1.5" style={{ fontSize: 10, color: 'var(--bx-mute-2)' }}>
+            <span
+              className="bx-chip"
+              style={{
+                background: `${accent}1A`,
+                color: accent,
+                padding: '2px 6px',
+              }}
+            >
+              {b.status === 'pending' ? '⏳' : b.status === 'confirmed' ? '✓' : '🚩'}{' '}
+              {STATUS_LABEL[b.status]}
+            </span>
+          </div>
+        </div>
+        <div className="bx-display" style={{ fontSize: 22 }}>
+          {b.winner_score}<span style={{ color: 'var(--bx-mute-2)' }}>–</span>{b.loser_score}
+        </div>
       </div>
-      <div className="flex justify-between mt-1">
-        <span className="text-xs opacity-60">
-          {b.status === 'pending'
-            ? '⏳ zählt in 24h'
-            : b.status === 'confirmed'
-              ? '✓ zählt'
-              : '🚩 zählt nicht'}
-        </span>
-        {b.status === 'pending' && (
-          <button onClick={() => setShowDispute(true)} className="text-xs text-red-400">
+      {b.status === 'pending' && (
+        <div className="flex justify-end mt-2">
+          <button
+            onClick={() => setShowDispute(true)}
+            className="bx-mono"
+            style={{ fontSize: 10, color: 'var(--bx-crimson)' }}
+          >
             🚩 stimmt nicht
           </button>
-        )}
-      </div>
+        </div>
+      )}
       {showDispute && (
         <DisputeSheet battleId={b.id} onClose={() => setShowDispute(false)} />
       )}

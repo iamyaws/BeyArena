@@ -1,4 +1,7 @@
-// src/components/tower/TowerView.tsx
+// TowerView — leaderboard view of the floors.
+// Sparse: only occupied floors shown. The Peak (100) gets the gradient
+// header treatment; ZONES are mono dividers between floor ranges.
+
 import { useAllKids } from '../../hooks/useKid';
 import { useSession } from '../../stores/session';
 import { TowerRow } from './TowerRow';
@@ -7,13 +10,9 @@ import type { Kid } from '../../lib/types';
 
 type Zone = { label: string; min: number; max: number };
 
-// Zones describe inclusive floor ranges shown between markers.
-// The Peak (100) is rendered above all zones with a special highlight.
 const ZONES: Zone[] = [
   { label: 'Approach Zone (91-99)', min: 91, max: 99 },
   { label: 'Mid Tower (50-90)', min: 50, max: 90 },
-  // Floors 1-49 (Lower Floors) intentionally have no marker per spec —
-  // they appear as a tail of occupied rows below the Mid Tower marker.
 ];
 
 type Row =
@@ -25,7 +24,6 @@ export function TowerView() {
   const { data: kids = [] } = useAllKids();
   const nav = useNavigate();
 
-  // sort by floor desc, then elo desc — sparse list (only occupied floors)
   const sorted = [...kids].sort((a, b) => b.floor - a.floor || b.elo - a.elo);
   const peakKid = sorted.find((k) => k.floor === 100);
 
@@ -42,7 +40,6 @@ export function TowerView() {
     }
   }
 
-  // Lower Floors (1-49) tail — kids below Mid Tower with no marker per spec.
   const lowerKids = sorted.filter(
     (k) => k.id !== peakKid?.id && k.floor < (ZONES[ZONES.length - 1]?.min ?? 1),
   );
@@ -51,25 +48,56 @@ export function TowerView() {
   }
 
   return (
-    <div className="p-4 space-y-1">
-      <h1 className="text-xl font-bold mb-3">Der Turm — The X</h1>
-      {rows.map((r) =>
-        r.kind === 'zone' ? (
+    <div className="bx min-h-screen w-full">
+      <div className="px-5 pt-5">
+        <div className="bx-eyebrow">Saison 04 · Etage 1–100</div>
+        <div
+          className="bx-display"
+          style={{ fontSize: 36, lineHeight: 0.9, marginTop: 8 }}
+        >
+          DER TURM
+          <span style={{ color: 'var(--bx-yellow)' }}>.</span>
+        </div>
+        <div
+          className="bx-mono mt-2"
+          style={{ fontSize: 11, color: 'var(--bx-mute)' }}
+        >
+          {kids.length} Spieler · The X
+        </div>
+      </div>
+
+      <div className="px-4 pt-5 pb-6">
+        {rows.map((r) =>
+          r.kind === 'zone' ? (
+            <div
+              key={r.key}
+              className="bx-divider-y"
+              style={{ margin: '10px 4px' }}
+            >
+              {r.label}
+            </div>
+          ) : (
+            <TowerRow
+              key={r.key}
+              kid={r.kid}
+              isMe={r.kid.id === me?.id}
+              onTap={() => nav(`/profil/${r.kid.id}`)}
+            />
+          ),
+        )}
+        {rows.length === 0 && (
           <div
-            key={r.key}
-            className="text-xs uppercase tracking-widest opacity-40 py-2 text-center"
+            className="text-center bx-mono"
+            style={{
+              padding: 30,
+              color: 'var(--bx-mute)',
+              fontSize: 12,
+            }}
           >
-            — {r.label} —
+            Lade Turm…
           </div>
-        ) : (
-          <TowerRow
-            key={r.key}
-            kid={r.kid}
-            isMe={r.kid.id === me?.id}
-            onTap={() => nav(`/profil/${r.kid.id}`)}
-          />
-        ),
-      )}
+        )}
+      </div>
     </div>
   );
 }

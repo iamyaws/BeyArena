@@ -2,6 +2,335 @@
 @tailwind components;
 @tailwind utilities;
 
+/* BeyArena — German kids' Beyblade X battle tracker */
+/* Hi-fi design tokens, dark arcade-tournament aesthetic */
+
+:root {
+  --bx-yellow: #fde047;
+  --bx-yellow-deep: #eab308;
+  --bx-crimson: #dc2626;
+  --bx-crimson-deep: #991b1b;
+  --bx-cobalt: #2563eb;
+  --bx-cobalt-deep: #1e3a8a;
+  --bx-ink: #07070a;
+  --bx-ink-2: #0f1014;
+  --bx-ink-3: #16181f;
+  --bx-ink-4: #1e2029;
+  --bx-line: #2a2d38;
+  --bx-mute: rgba(255, 255, 255, 0.55);
+  --bx-mute-2: rgba(255, 255, 255, 0.35);
+}
+
 @layer base {
-  body { @apply bg-black text-white; }
+  body {
+    @apply bg-black text-white;
+    font-family: 'Inter Tight', Inter, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: -0.005em;
+  }
+
+  /* Buttons inherit black from UA — make sure our chrome buttons inherit text color from parent. */
+  button {
+    color: inherit;
+  }
+  input,
+  select,
+  textarea {
+    color: inherit;
+  }
+}
+
+/* ───── Typography ───── */
+
+.bx-display {
+  font-family: 'Saira Stencil One', 'Bebas Neue', 'Druk Wide', system-ui, sans-serif;
+  letter-spacing: 0.04em;
+  font-weight: 400;
+}
+
+.bx-mono {
+  font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+  letter-spacing: 0.02em;
+}
+
+.bx-h1 {
+  font-family: 'Saira Stencil One', system-ui, sans-serif;
+  font-size: 34px;
+  line-height: 0.95;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.bx-h2 {
+  font-family: 'Saira Stencil One', system-ui, sans-serif;
+  font-size: 22px;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.bx-eyebrow {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--bx-mute);
+}
+
+.bx-num {
+  font-family: 'Saira Stencil One', system-ui, sans-serif;
+  letter-spacing: 0;
+}
+
+/* ───── Repeating textures ───── */
+
+.bx-scanlines {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.03) 0px,
+    rgba(255, 255, 255, 0.03) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+.bx-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.bx-grid-fine {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 12px 12px;
+}
+
+.bx-halftone {
+  background-image: radial-gradient(rgba(253, 224, 71, 0.12) 1px, transparent 1.2px);
+  background-size: 8px 8px;
+}
+
+.bx-noise {
+  position: relative;
+}
+.bx-noise::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+/* ───── Buttons ───── */
+
+.bx-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-family: 'Saira Stencil One', system-ui, sans-serif;
+  font-size: 16px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition:
+    transform 0.08s ease,
+    filter 0.15s ease;
+  position: relative;
+  user-select: none;
+}
+.bx-btn:active {
+  transform: translateY(1px);
+}
+.bx-btn-yellow {
+  background: var(--bx-yellow);
+  color: var(--bx-ink);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.18),
+    0 8px 24px -8px rgba(253, 224, 71, 0.55);
+}
+.bx-btn-crimson {
+  background: var(--bx-crimson);
+  color: #fff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.28),
+    0 8px 24px -8px rgba(220, 38, 38, 0.5);
+}
+.bx-btn-ghost {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+/* ───── Cards / chips ───── */
+
+.bx-card {
+  background: var(--bx-ink-3);
+  border: 1px solid var(--bx-line);
+  border-radius: 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+.bx-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.bx-tag {
+  display: inline-block;
+  padding: 3px 7px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  background: var(--bx-yellow);
+  color: var(--bx-ink);
+}
+
+/* ───── Glow / FX ───── */
+
+.bx-yellow-glow {
+  filter: drop-shadow(0 0 12px rgba(253, 224, 71, 0.45));
+}
+.bx-crimson-glow {
+  filter: drop-shadow(0 0 14px rgba(220, 38, 38, 0.55));
+}
+
+.bx-divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--bx-line) 20%,
+    var(--bx-line) 80%,
+    transparent
+  );
+}
+
+.bx-divider-y {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: rgba(255, 255, 255, 0.35);
+  text-transform: uppercase;
+}
+.bx-divider-y::before,
+.bx-divider-y::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ───── Spinning bey placeholder ───── */
+@keyframes bx-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.bx-spin {
+  animation: bx-spin 4.5s linear infinite;
+}
+.bx-spin-fast {
+  animation: bx-spin 1.2s linear infinite;
+}
+
+/* ───── Pulse for live indicators ───── */
+@keyframes bx-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+.bx-pulse {
+  animation: bx-pulse 1.6s ease-in-out infinite;
+}
+
+/* ───── Scanner sweep ───── */
+@keyframes bx-sweep {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(220%);
+  }
+}
+.bx-sweep {
+  animation: bx-sweep 2.4s ease-in-out infinite;
+}
+
+/* ───── Tower spine ───── */
+.bx-tower-spine {
+  background: linear-gradient(to bottom, transparent, rgba(253, 224, 71, 0.5), transparent);
+}
+
+/* ───── Bottom nav ───── */
+.bx-bottomnav {
+  background: rgba(7, 7, 10, 0.92);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ───── Avatar ───── */
+.bx-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Saira Stencil One', system-ui, sans-serif;
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+}
+.bx-avatar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.35), transparent 55%);
+}
+
+/* ───── Range slider styling ───── */
+input[type='range'].bx-range {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  outline: none;
+}
+input[type='range'].bx-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  background: var(--bx-yellow);
+  border-radius: 50%;
+  border: 2px solid var(--bx-ink);
+  box-shadow: 0 0 12px rgba(253, 224, 71, 0.6);
 }

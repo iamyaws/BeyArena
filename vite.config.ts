@@ -10,8 +10,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icons/*.svg'],
       manifest: {
-        name: 'Beystadium',
-        short_name: 'Beystadium',
+        name: 'BeyArena',
+        short_name: 'BeyArena',
+        lang: 'de',
         theme_color: '#000000',
         background_color: '#000000',
         display: 'standalone',

@@ -6,15 +6,13 @@ import { ProfilePage } from './pages/ProfilePage';
 import { PublicProfilePage } from './pages/PublicProfilePage';
 import { FeedPage } from './pages/FeedPage';
 import { HomePage } from './pages/HomePage';
+import { QrLoginPage } from './pages/QrLoginPage';
 import { KidRoute } from './components/auth/KidRoute';
 import { AdminRoute } from './components/auth/AdminRoute';
 import { WerkstattLayout } from './pages/werkstatt/WerkstattLayout';
 import { KidsListPage } from './pages/werkstatt/KidsListPage';
 import { CreateKidPage } from './pages/werkstatt/CreateKidPage';
 import { DisputesPage } from './pages/werkstatt/DisputesPage';
-
-// Placeholders — full pages added in later tasks
-const QrLogin = () => <div className="p-6">QR Login — Task 23</div>;
 
 export function AppRoutes() {
   return (
@@ -67,7 +65,7 @@ export function AppRoutes() {
           </KidRoute>
         }
       />
-      <Route path="/q/:token" element={<QrLogin />} />
+      <Route path="/q/:token" element={<QrLoginPage />} />
       <Route path="/admin/login" element={<AdminLoginPage />} />
       <Route
         path="/werkstatt"

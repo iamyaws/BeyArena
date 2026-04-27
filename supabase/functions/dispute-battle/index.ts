@@ -32,6 +32,22 @@ Deno.serve(async (req) => {
   const { battle_id, reason_code, note } = await req.json().catch(() => ({}));
   if (!battle_id || !reason_code) return new Response('missing fields', { status: 400 });
 
+  const VALID_REASONS = new Set([
+    'wrong_score',
+    'didnt_happen',
+    'wrong_opponent',
+    'wrong_bey',
+    'other',
+  ]);
+  const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+  if (!UUID_RE.test(battle_id ?? '')) {
+    return new Response(JSON.stringify({ error: 'invalid battle_id' }), { status: 400 });
+  }
+  if (!VALID_REASONS.has(reason_code)) {
+    return new Response(JSON.stringify({ error: 'invalid reason_code' }), { status: 400 });
+  }
+
   // Verify battle is still pending
   const { data: battle } = await supa
     .from('battles')

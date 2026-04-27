@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
+import { AdminLoginPage } from './pages/AdminLoginPage';
 
 // Placeholders — full pages added in later tasks
 const Home = () => <div className="p-6">Home — coming in Task 49</div>;
@@ -7,7 +8,6 @@ const Profile = () => <div className="p-6">Profile — Task 44</div>;
 const Feed = () => <div className="p-6">Feed — Task 47</div>;
 const LogBattle = () => <div className="p-6">Log — Task 31</div>;
 const QrLogin = () => <div className="p-6">QR Login — Task 23</div>;
-const AdminLogin = () => <div className="p-6">Admin Login — Task 21</div>;
 const Werkstatt = () => <div className="p-6">Werkstatt — Task 52</div>;
 
 export function AppRoutes() {
@@ -19,7 +19,7 @@ export function AppRoutes() {
       <Route path="/feed" element={<Feed />} />
       <Route path="/log" element={<LogBattle />} />
       <Route path="/q/:token" element={<QrLogin />} />
-      <Route path="/admin/login" element={<AdminLogin />} />
+      <Route path="/admin/login" element={<AdminLoginPage />} />
       <Route path="/werkstatt/*" element={<Werkstatt />} />
     </Routes>
   );

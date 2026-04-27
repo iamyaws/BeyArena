@@ -12,6 +12,7 @@ import { AdminRoute } from './components/auth/AdminRoute';
 import { WerkstattLayout } from './pages/werkstatt/WerkstattLayout';
 import { KidsListPage } from './pages/werkstatt/KidsListPage';
 import { CreateKidPage } from './pages/werkstatt/CreateKidPage';
+import { KidDetailPage } from './pages/werkstatt/KidDetailPage';
 import { DisputesPage } from './pages/werkstatt/DisputesPage';
 
 export function AppRoutes() {
@@ -78,6 +79,7 @@ export function AppRoutes() {
         <Route index element={<KidsListPage />} />
         <Route path="new" element={<CreateKidPage />} />
         <Route path="disputes" element={<DisputesPage />} />
+        <Route path=":id" element={<KidDetailPage />} />
       </Route>
     </Routes>
   );

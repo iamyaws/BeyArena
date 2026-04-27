@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { AdminLoginPage } from './pages/AdminLoginPage';
 import { LogBattleFlow } from './pages/LogBattleFlow';
@@ -9,11 +10,24 @@ import { HomePage } from './pages/HomePage';
 import { QrLoginPage } from './pages/QrLoginPage';
 import { KidRoute } from './components/auth/KidRoute';
 import { AdminRoute } from './components/auth/AdminRoute';
-import { WerkstattLayout } from './pages/werkstatt/WerkstattLayout';
-import { KidsListPage } from './pages/werkstatt/KidsListPage';
-import { CreateKidPage } from './pages/werkstatt/CreateKidPage';
-import { KidDetailPage } from './pages/werkstatt/KidDetailPage';
-import { DisputesPage } from './pages/werkstatt/DisputesPage';
+
+// Werkstatt admin routes are lazy-loaded so kids don't download the
+// pdf-lib + qrcode payload that only admins use.
+const WerkstattLayout = lazy(() =>
+  import('./pages/werkstatt/WerkstattLayout').then((m) => ({ default: m.WerkstattLayout })),
+);
+const KidsListPage = lazy(() =>
+  import('./pages/werkstatt/KidsListPage').then((m) => ({ default: m.KidsListPage })),
+);
+const CreateKidPage = lazy(() =>
+  import('./pages/werkstatt/CreateKidPage').then((m) => ({ default: m.CreateKidPage })),
+);
+const KidDetailPage = lazy(() =>
+  import('./pages/werkstatt/KidDetailPage').then((m) => ({ default: m.KidDetailPage })),
+);
+const DisputesPage = lazy(() =>
+  import('./pages/werkstatt/DisputesPage').then((m) => ({ default: m.DisputesPage })),
+);
 
 export function AppRoutes() {
   return (
@@ -72,7 +86,9 @@ export function AppRoutes() {
         path="/werkstatt"
         element={
           <AdminRoute>
-            <WerkstattLayout />
+            <Suspense fallback={<div className="p-6">Lade...</div>}>
+              <WerkstattLayout />
+            </Suspense>
           </AdminRoute>
         }
       >

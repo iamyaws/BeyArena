@@ -56,6 +56,7 @@ export interface Database {
           created_at?: string;
           created_by_admin_id?: string | null;
         };
+        Relationships: [];
       };
       teams: {
         Row: {
@@ -82,6 +83,7 @@ export interface Database {
           created_by_kid_id?: string | null;
           created_at?: string;
         };
+        Relationships: [];
       };
       team_members: {
         Row: {
@@ -99,6 +101,7 @@ export interface Database {
           kid_id?: string;
           joined_at?: string;
         };
+        Relationships: [];
       };
       push_subscriptions: {
         Row: {
@@ -125,6 +128,7 @@ export interface Database {
           auth?: string;
           created_at?: string;
         };
+        Relationships: [];
       };
       bey_parts: {
         Row: {
@@ -163,6 +167,7 @@ export interface Database {
           source_url?: string | null;
           created_at?: string;
         };
+        Relationships: [];
       };
       beys: {
         Row: {
@@ -231,6 +236,7 @@ export interface Database {
           scraped_at?: string | null;
           created_at?: string;
         };
+        Relationships: [];
       };
       kid_beys: {
         Row: {
@@ -251,6 +257,7 @@ export interface Database {
           acquired_at?: string;
           nickname?: string | null;
         };
+        Relationships: [];
       };
       battles: {
         Row: {
@@ -301,6 +308,7 @@ export interface Database {
           voided_reason?: string | null;
           dispute_window_ends_at?: string;
         };
+        Relationships: [];
       };
       battle_rounds: {
         Row: {
@@ -324,6 +332,7 @@ export interface Database {
           winner_kid_id?: string;
           points?: number;
         };
+        Relationships: [];
       };
       disputes: {
         Row: {
@@ -350,6 +359,7 @@ export interface Database {
           note?: string | null;
           created_at?: string;
         };
+        Relationships: [];
       };
       notifications: {
         Row: {
@@ -376,6 +386,7 @@ export interface Database {
           read_at?: string | null;
           created_at?: string;
         };
+        Relationships: [];
       };
       milestones: {
         Row: {
@@ -402,6 +413,7 @@ export interface Database {
           icon_url?: string | null;
           created_at?: string;
         };
+        Relationships: [];
       };
       kid_milestones: {
         Row: {
@@ -419,6 +431,7 @@ export interface Database {
           milestone_id?: string;
           unlocked_at?: string;
         };
+        Relationships: [];
       };
       stickers: {
         Row: {
@@ -448,6 +461,7 @@ export interface Database {
           min_floor_to_send?: number;
           created_at?: string;
         };
+        Relationships: [];
       };
       endorsements: {
         Row: {
@@ -474,6 +488,7 @@ export interface Database {
           after_battle_id?: string | null;
           created_at?: string;
         };
+        Relationships: [];
       };
     };
     Views: Record<string, never>;

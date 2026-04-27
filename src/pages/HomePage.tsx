@@ -9,10 +9,55 @@ import { useFeed } from '../hooks/useBattles';
 import { Avatar } from '../components/ui/Avatar';
 
 export function HomePage() {
-  const { data: kid } = useCurrentKid();
+  const { data: kid, isLoading, error } = useCurrentKid();
   const { data: kids = [] } = useAllKids();
   const { data: feed = [] } = useFeed('all');
-  if (!kid) return null;
+
+  // While the kid query is pending we can't render the dashboard. Show a
+  // small Lade… placeholder rather than a blank screen — the kid hook is
+  // gated on a session that hydrates synchronously from localStorage so this
+  // is usually a quick flash, but a network hiccup or schema mismatch can
+  // otherwise leave HomePage rendering nothing.
+  if (isLoading) {
+    return (
+      <div
+        className="bx min-h-screen w-full flex items-center justify-center"
+        style={{ background: 'var(--bx-ink)' }}
+      >
+        <div
+          className="bx-mono"
+          style={{
+            color: 'var(--bx-mute)',
+            letterSpacing: '0.18em',
+            textTransform: 'uppercase',
+            fontSize: 11,
+          }}
+        >
+          Lade…
+        </div>
+      </div>
+    );
+  }
+  if (error || !kid) {
+    return (
+      <div
+        className="bx min-h-screen w-full flex items-center justify-center"
+        style={{ background: 'var(--bx-ink)', padding: 32 }}
+      >
+        <div style={{ textAlign: 'center', maxWidth: 320 }}>
+          <div className="bx-display" style={{ fontSize: 28, color: 'var(--bx-crimson)' }}>
+            Ohh nein.
+          </div>
+          <p
+            className="bx-mono"
+            style={{ marginTop: 12, fontSize: 12, color: 'var(--bx-mute)' }}
+          >
+            Wir konnten dich nicht finden. Frag Marc nach einer neuen Karte.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   const aboveMe = kids.filter((k) => k.elo > kid.elo).sort((a, b) => a.elo - b.elo);
   const next = aboveMe[0];

@@ -17,7 +17,7 @@ type Tab = 'karte' | 'sammlung' | 'kämpfe';
 
 export function PublicProfilePage() {
   const { id } = useParams<{ id: string }>();
-  const { data: kid } = useKidById(id ?? null);
+  const { data: kid, isLoading, error } = useKidById(id ?? null);
   const { data: battles = [] } = useFeed('all');
   const { data: ownedBeys = [] } = useKidBeys(id ?? null);
   const { data: allBeys = [] } = useAllBeys();
@@ -29,10 +29,43 @@ export function PublicProfilePage() {
   );
 
   if (!id) return null;
-  if (!kid) {
+  if (isLoading) {
     return (
-      <div className="bx min-h-screen w-full flex items-center justify-center">
-        <div className="bx-mono opacity-60">Lade…</div>
+      <div
+        className="bx min-h-screen w-full flex items-center justify-center"
+        style={{ background: 'var(--bx-ink)' }}
+      >
+        <div
+          className="bx-mono"
+          style={{
+            color: 'var(--bx-mute)',
+            letterSpacing: '0.18em',
+            textTransform: 'uppercase',
+            fontSize: 11,
+          }}
+        >
+          Lade…
+        </div>
+      </div>
+    );
+  }
+  if (error || !kid) {
+    return (
+      <div
+        className="bx min-h-screen w-full flex items-center justify-center"
+        style={{ background: 'var(--bx-ink)', padding: 32 }}
+      >
+        <div style={{ textAlign: 'center', maxWidth: 320 }}>
+          <div className="bx-display" style={{ fontSize: 28, color: 'var(--bx-crimson)' }}>
+            Ohh nein.
+          </div>
+          <p
+            className="bx-mono"
+            style={{ marginTop: 12, fontSize: 12, color: 'var(--bx-mute)' }}
+          >
+            Spieler nicht gefunden.
+          </p>
+        </div>
       </div>
     );
   }

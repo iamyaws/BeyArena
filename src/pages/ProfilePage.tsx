@@ -26,7 +26,7 @@ type Tab = 'karte' | 'sammlung' | 'kämpfe';
 
 export function ProfilePage() {
   const { kid: session } = useSession();
-  const { data: kid } = useCurrentKid();
+  const { data: kid, isLoading, error } = useCurrentKid();
   const { data: kids = [] } = useAllKids();
   const { data: battles = [] } = useFeed('mine');
   const { data: ownedBeys = [] } = useKidBeys(session?.id);
@@ -47,7 +47,49 @@ export function ProfilePage() {
     return s;
   }, [battles, session]);
 
-  if (!kid || !session) return null;
+  // Loading + error states: the kid query is gated on a Zustand session that
+  // hydrates synchronously from localStorage, but a network blip would
+  // otherwise leave the page rendering nothing. Show explicit feedback.
+  if (isLoading || !session) {
+    return (
+      <div
+        className="bx min-h-screen w-full flex items-center justify-center"
+        style={{ background: 'var(--bx-ink)' }}
+      >
+        <div
+          className="bx-mono"
+          style={{
+            color: 'var(--bx-mute)',
+            letterSpacing: '0.18em',
+            textTransform: 'uppercase',
+            fontSize: 11,
+          }}
+        >
+          Lade…
+        </div>
+      </div>
+    );
+  }
+  if (error || !kid) {
+    return (
+      <div
+        className="bx min-h-screen w-full flex items-center justify-center"
+        style={{ background: 'var(--bx-ink)', padding: 32 }}
+      >
+        <div style={{ textAlign: 'center', maxWidth: 320 }}>
+          <div className="bx-display" style={{ fontSize: 28, color: 'var(--bx-crimson)' }}>
+            Ohh nein.
+          </div>
+          <p
+            className="bx-mono"
+            style={{ marginTop: 12, fontSize: 12, color: 'var(--bx-mute)' }}
+          >
+            Wir konnten dich nicht finden. Frag Marc nach einer neuen Karte.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   const wins = battles.filter(
     (b) => b.status === 'confirmed' && b.winner_kid_id === session.id,

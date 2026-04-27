@@ -2,6 +2,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../lib/supabase';
 import { useSession } from '../stores/session';
+import { enqueueBattle } from '../lib/offline-queue';
 import type { DraftBattle } from '../lib/types';
 
 export type FeedFilter = 'all' | 'pending' | 'mine' | 'voided';
@@ -41,21 +42,29 @@ export function useLogBattle() {
       const winner_bey_id = draft.i_won ? draft.my_bey_id : draft.opp_bey_id;
       const loser_bey_id = draft.i_won ? draft.opp_bey_id : draft.my_bey_id;
 
-      const { data, error } = await supabase
-        .from('battles')
-        .insert({
-          logger_kid_id: kid.id,
-          winner_kid_id,
-          loser_kid_id,
-          winner_score,
-          loser_score,
-          winner_bey_id,
-          loser_bey_id,
-        })
-        .select()
-        .single();
-      if (error) throw error;
-      return data;
+      try {
+        const { data, error } = await supabase
+          .from('battles')
+          .insert({
+            logger_kid_id: kid.id,
+            winner_kid_id,
+            loser_kid_id,
+            winner_score,
+            loser_score,
+            winner_bey_id,
+            loser_bey_id,
+          })
+          .select()
+          .single();
+        if (error) throw error;
+        return data;
+      } catch (e) {
+        if (!navigator.onLine) {
+          await enqueueBattle(draft);
+          return { queued: true } as never;
+        }
+        throw e;
+      }
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['feed'] });

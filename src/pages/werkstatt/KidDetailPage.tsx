@@ -3,7 +3,13 @@ import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useKidById } from '../../hooks/useKid';
 import { supabase } from '../../lib/supabase';
-import { generateToken, buildQrCardPdf } from '../../lib/qr-card';
+import { generateToken, buildQrCardPdf, type CardBey } from '../../lib/qr-card';
+
+const FALLBACK_BEY: CardBey = {
+  name_en: 'DranSword 3-60F',
+  product_code: 'BX-01',
+  type: 'attack',
+};
 
 function useTotalBattles(kidId: string | null) {
   return useQuery({
@@ -20,6 +26,43 @@ function useTotalBattles(kidId: string | null) {
     },
     enabled: !!kidId,
   });
+}
+
+/**
+ * Look up the kid's primary bey via kid_beys → beys. Falls back to the seed
+ * default (DranSword BX-01) if no nickname/primary entry exists yet — matches
+ * the CreateKidPage seed behaviour.
+ */
+async function fetchPrimaryBey(kidId: string): Promise<CardBey> {
+  const { data: kidBey } = await supabase
+    .from('kid_beys')
+    .select('bey_id')
+    .eq('kid_id', kidId)
+    .order('acquired_at', { ascending: true })
+    .limit(1)
+    .maybeSingle();
+
+  if (kidBey?.bey_id) {
+    const { data: bey } = await supabase
+      .from('beys')
+      .select('name_en, product_code, type')
+      .eq('id', kidBey.bey_id)
+      .maybeSingle();
+    if (bey) {
+      return { name_en: bey.name_en, product_code: bey.product_code, type: bey.type };
+    }
+  }
+
+  // Fall back to BX-01 from the seed library
+  const { data: seed } = await supabase
+    .from('beys')
+    .select('name_en, product_code, type')
+    .eq('product_code', 'BX-01')
+    .maybeSingle();
+  if (seed) {
+    return { name_en: seed.name_en, product_code: seed.product_code, type: seed.type };
+  }
+  return FALLBACK_BEY;
 }
 
 export function KidDetailPage() {
@@ -44,7 +87,17 @@ export function KidDetailPage() {
       if (updateError) throw updateError;
 
       const qrUrl = `${window.location.origin}/q/${token}`;
-      const pdfBytes = await buildQrCardPdf(kid.display_name, qrUrl);
+      const bey = await fetchPrimaryBey(kid.id);
+      const pdfBytes = await buildQrCardPdf({
+        kid: {
+          id: kid.id,
+          display_name: kid.display_name,
+          floor: kid.floor,
+          card_color_hex: kid.card_color_hex,
+        },
+        bey,
+        qrUrl,
+      });
       // pdf-lib returns Uint8Array; copy into a fresh ArrayBuffer-backed view for Blob (TS 5.6+ strict).
       const pdfBuffer = pdfBytes.slice().buffer;
       const blob = new Blob([pdfBuffer], { type: 'application/pdf' });

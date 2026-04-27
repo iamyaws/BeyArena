@@ -1,7 +1,31 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
-import { generateToken, buildQrCardPdf } from '../../lib/qr-card';
+import { generateToken, buildQrCardPdf, type CardBey } from '../../lib/qr-card';
+
+// Hard fallback if the seed bey row is missing — the front of the card always
+// needs *something* to draw. DranSword (BX-01) is the canonical starter bey.
+const FALLBACK_BEY: CardBey = {
+  name_en: 'DranSword 3-60F',
+  product_code: 'BX-01',
+  type: 'attack',
+};
+
+async function fetchDefaultBey(): Promise<CardBey> {
+  const { data } = await supabase
+    .from('beys')
+    .select('name_en, product_code, type')
+    .eq('product_code', 'BX-01')
+    .maybeSingle();
+  if (data) {
+    return {
+      name_en: data.name_en,
+      product_code: data.product_code,
+      type: data.type,
+    };
+  }
+  return FALLBACK_BEY;
+}
 
 export function CreateKidPage() {
   const nav = useNavigate();
@@ -20,13 +44,23 @@ export function CreateKidPage() {
           display_name: name,
           token_hash: tokenHash,
         })
-        .select('id, display_name')
+        .select('id, display_name, floor, card_color_hex')
         .single();
       if (insertError) throw insertError;
       if (!data) throw new Error('Insert returned no data');
 
       const qrUrl = `${window.location.origin}/q/${token}`;
-      const pdfBytes = await buildQrCardPdf(data.display_name, qrUrl);
+      const bey = await fetchDefaultBey();
+      const pdfBytes = await buildQrCardPdf({
+        kid: {
+          id: data.id,
+          display_name: data.display_name,
+          floor: data.floor,
+          card_color_hex: data.card_color_hex,
+        },
+        bey,
+        qrUrl,
+      });
       // pdf-lib returns Uint8Array; copy into a fresh ArrayBuffer-backed view for Blob (TS 5.6+ strict).
       const pdfBuffer = pdfBytes.slice().buffer;
       const blob = new Blob([pdfBuffer], { type: 'application/pdf' });

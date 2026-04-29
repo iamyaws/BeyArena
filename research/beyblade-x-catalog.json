@@ -1,0 +1,426 @@
+{
+  "_comment": "Scraped Beyblade X bey catalog. Source: beyblade.fandom.com wiki. Generated 2026-04-29. 43 entries cleaned + normalized for Supabase insert.",
+  "_notes": [
+    "product_code is normalized: BX-NN, CX-NN, UX-NN where wiki provides it; otherwise null (page lacked clean code)",
+    "type values normalized to lowercase enum: attack/defense/stamina/balance",
+    "line values normalized to lowercase enum: basic/custom/unique. 'Beyblade X' or 'X-Over Project' or unclear -> defaults to basic",
+    "image_url uses static.wikia.nocookie.net URLs where available; some entries have File: paths that need file extension"
+  ],
+  "scraped_at": "2026-04-29T00:00:00Z",
+  "beys": [
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/DranSword_3-60F",
+      "name_en": "DranSword 3-60F",
+      "name_jp": "ドランソード3-60F",
+      "product_code": "BX-01",
+      "type": "attack",
+      "line": "basic",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/6/66/Beyblade_X_-_DranSword_3-60F.png/revision/latest?cb=20250218113155"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/HellsScythe_4-60T",
+      "name_en": "HellsScythe 4-60T",
+      "name_jp": "ヘルズサイズ4-60T",
+      "product_code": "BX-02",
+      "type": "balance",
+      "line": "basic",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/1/1a/HellsScythe_4-60T.jpeg/revision/latest?cb=20230517044323"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/WizardArrow_4-80B",
+      "name_en": "WizardArrow 4-80B",
+      "name_jp": "ウィザードアロー4-80B",
+      "product_code": "BX-03",
+      "type": "stamina",
+      "line": "basic",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/6/6d/WizardArrow_4-80B.jpeg/revision/latest?cb=20230517044837"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/KnightShield_3-80N",
+      "name_en": "KnightShield 3-80N",
+      "name_jp": "ナイトシールド3-80N",
+      "product_code": "BX-04",
+      "type": "defense",
+      "line": "basic",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/a/ac/KnightShield_3-80N.jpeg/revision/latest?cb=20230517045417"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/KnightLance_4-80HN",
+      "name_en": "KnightLance 4-80HN",
+      "name_jp": "ナイトランス4-80HN",
+      "product_code": "BX-13",
+      "type": "defense",
+      "line": "basic",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/d/db/KnightLance_4-80HN.jpeg/revision/latest?cb=20230713173320"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/LeonClaw_5-60P",
+      "name_en": "LeonClaw 5-60P",
+      "name_jp": "レオンクロー5-60P",
+      "product_code": "BX-15",
+      "type": "balance",
+      "line": "basic",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/f/f4/LeonClaw_5-60P.jpeg/revision/latest/scale-to-width-down/1200?cb=20230914033817"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/PhoenixFeather_3-60F",
+      "name_en": "PhoenixFeather 3-60F",
+      "name_jp": "フェニックスフェザー3-60F",
+      "product_code": "BX-17",
+      "type": "attack",
+      "line": "basic",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/8/82/PhoenixFeather_3-60F.jpg/revision/latest?cb=20241025004934"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/DranDagger_4-60R",
+      "name_en": "DranDagger 4-60R",
+      "name_jp": "ドランダガー4-60R",
+      "product_code": "BX-20",
+      "type": "attack",
+      "line": "basic",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/2/25/DranDagger_4-60R.jpeg/revision/latest/scale-to-width-down/1200?cb=20240321181845"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/HellsChain_5-60HT",
+      "name_en": "HellsChain 5-60HT",
+      "name_jp": "ヘルズチェイン5-60HT",
+      "product_code": "BX-21",
+      "type": "balance",
+      "line": "basic",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/d/d1/HellsChain_5-60HT.jpeg/revision/latest?cb=20250815161204"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/PhoenixWing_9-60GF",
+      "name_en": "PhoenixWing 9-60GF",
+      "name_jp": "フェニックスウイング9-60GF",
+      "product_code": "BX-23",
+      "type": "attack",
+      "line": "basic",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/0/02/PhoenixWing_9-60GF.jpeg/revision/latest?cb=20231114155235"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/UnicornSting_5-60GP",
+      "name_en": "UnicornSting 5-60GP",
+      "name_jp": "ユニコーンスティング5-60GP",
+      "product_code": "BX-26",
+      "type": "balance",
+      "line": "basic",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/c/cc/UnicornSting_5-60GP.jpg/revision/latest?cb=20240114194759"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/SphinxCowl_9-80GN",
+      "name_en": "SphinxCowl 9-80GN",
+      "name_jp": "スフィンクスカウル9-80GN",
+      "product_code": "BX-27",
+      "type": "defense",
+      "line": "basic",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/2/24/SphinxCowl_9-80GN.jpeg/revision/latest?cb=20240115035436"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/CobaltDragoon_2-60C",
+      "name_en": "CobaltDragoon 2-60C",
+      "name_jp": "コバルトドラグーン2-60C",
+      "product_code": "BX-34",
+      "type": "attack",
+      "line": "basic",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/a/aa/CobaltDragoon_2-60C_Render.jpeg/revision/latest?cb=20240613153221"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/MammothTusk_7-60S",
+      "name_en": "MammothTusk 7-60S",
+      "name_jp": "マンモスタスク7-60S",
+      "product_code": "BX-48",
+      "type": "defense",
+      "line": "basic",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/5/5c/MammothTusk_7-60S_%28Metal_Coat_Black_Minor_Change_Version%29.png/revision/latest?cb=20260115030546"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/DranStrike_4-50FF",
+      "name_en": "DranStrike 4-50FF",
+      "name_jp": "ドランストライク4-50FF",
+      "product_code": "BX-49",
+      "type": "attack",
+      "line": "basic",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/a/a6/DranStrike_4-50FF.png/revision/latest?cb=20260313073133"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/AeroPegasus_3-70A",
+      "name_en": "AeroPegasus 3-70A",
+      "name_jp": "エアロペガサス3-70A",
+      "product_code": "UX-00",
+      "type": "attack",
+      "line": "unique",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/4/4e/AeroPegasus_3-70A.jpeg/revision/latest?cb=20240712053337"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/DranBuster_1-60A",
+      "name_en": "DranBuster 1-60A",
+      "name_jp": "ドランバスター1-60A",
+      "product_code": "UX-01",
+      "type": "attack",
+      "line": "unique",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/9/96/DranBuster_1-60A.jpg/revision/latest?cb=20240217024643"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/HellsHammer_3-70H",
+      "name_en": "HellsHammer 3-70H",
+      "name_jp": "ヘルズハンマー3-70H",
+      "product_code": "UX-02",
+      "type": "balance",
+      "line": "unique",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/3/3b/HellsHammer_3-70H.jpg/revision/latest?cb=20240217040728"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/WizardRod_5-70DB",
+      "name_en": "WizardRod 5-70DB",
+      "name_jp": "ウィザードロッド5-70DB",
+      "product_code": "UX-03",
+      "type": "stamina",
+      "line": "unique",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/c/c4/WizardRod_5-70DB.jpg/revision/latest?cb=20240217041400"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/SamuraiSaber_2-70L",
+      "name_en": "SamuraiSaber 2-70L",
+      "name_jp": "サムライセイバー2-70L",
+      "product_code": "UX-09",
+      "type": "attack",
+      "line": "unique",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/d/d5/SamuraiSaber_2-70L.png/revision/latest?cb=20241015031813"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/ImpactDrake_9-60LR",
+      "name_en": "ImpactDrake 9-60LR",
+      "name_jp": "インパクトドレイク9-60LR",
+      "product_code": "UX-10",
+      "type": "attack",
+      "line": "unique",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/2/27/ImpactDrake_9-60LR.jpg/revision/latest?cb=20241115004630"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/MeteorDragoon_3-70J",
+      "name_en": "MeteorDragoon 3-70J",
+      "name_jp": "メテオドラグーン3-70J",
+      "product_code": "UX-17",
+      "type": "attack",
+      "line": "unique",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/b/b9/MeteorDragoon_3-70J.jpeg/revision/latest/scale-to-width-down/1200?cb=20260321060807"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/BulletGriffon_H",
+      "name_en": "BulletGriffon H",
+      "name_jp": "バレットグリフォンH",
+      "product_code": "UX-19",
+      "type": "balance",
+      "line": "unique",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/2/2c/BulletGriffon_H.png/revision/latest?cb=20260313073047"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/DranBrave_S6-60V",
+      "name_en": "DranBrave S6-60V",
+      "name_jp": "ドランブレイブS6-60V",
+      "product_code": "CX-01",
+      "type": "attack",
+      "line": "custom",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/1/16/DranBrave_S6-60V.png/revision/latest?cb=20250215032340"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/WizardArc_R4-55LO",
+      "name_en": "WizardArc R4-55LO",
+      "name_jp": "ウィザードアークR4-55LO",
+      "product_code": "CX-02",
+      "type": "stamina",
+      "line": "custom",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/9/9a/WizardArc_R4-55LO.png/revision/latest?cb=20250215034148"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/HellsReaper_T4-70K",
+      "name_en": "HellsReaper T4-70K",
+      "name_jp": "ヘルズリーパーT4-70K",
+      "product_code": "CX-05",
+      "type": "balance",
+      "line": "custom",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/b/b1/HellsReaper_T4-70K.png/revision/latest?cb=20250314031259"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/SolEclipse_D5-70TK",
+      "name_en": "SolEclipse D5-70TK",
+      "name_jp": "ソルエクリプスD5-70TK",
+      "product_code": "CX-09",
+      "type": "balance",
+      "line": "custom",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/b/ba/SolEclipse_D5-70TK_%28Double_Upper_Mode%29.png/revision/latest?cb=20250812024000"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/RagnaRage_FE4-55Y",
+      "name_en": "RagnaRage FE4-55Y",
+      "name_jp": "ラグナレイジFE4-55Y",
+      "product_code": "CX-15",
+      "type": "stamina",
+      "line": "custom",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/5/54/RagnaRage_FE4-55Y.jpeg/revision/latest?cb=20260213160735"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/UnicornDelta_PO3-60GU",
+      "name_en": "UnicornDelta PO3-60GU",
+      "name_jp": "ユニコーンデルタPO3-60GU",
+      "product_code": "CX-17",
+      "type": "balance",
+      "line": "custom",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/8/82/UnicornDelta_PO3-60GU.png/revision/latest?cb=20260415015357"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/SilverWolf_3-80FB",
+      "name_en": "SilverWolf 3-80FB",
+      "name_jp": "シルバーウルフ3-80FB",
+      "product_code": "BX-37",
+      "type": "stamina",
+      "line": "basic",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/c/c7/SilverWolf_3-80FB.png/revision/latest?cb=20240913030733"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/CobaltDrake_4-60F",
+      "name_en": "CobaltDrake 4-60F",
+      "name_jp": "コバルトドレイク4-60F",
+      "product_code": "BX-RB1",
+      "type": "attack",
+      "line": "basic",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/5/5a/CobaltDrake_4-60F.jpeg/revision/latest?cb=20230912065524"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/OrochiCluster_6-60LF",
+      "name_en": "OrochiCluster 6-60LF",
+      "name_jp": "オロチクラスタ6-60LF",
+      "product_code": "BX-PR2",
+      "type": "attack",
+      "line": "unique",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/f/f8/OrochiCluster_6-60LF.jpg/revision/latest?cb=20251113104830"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/SharkEdge_4-80N",
+      "name_en": "SharkEdge 4-80N",
+      "name_jp": "シャークエッジ4-80N",
+      "product_code": "BX-RB1-1",
+      "type": "defense",
+      "line": "basic",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/8/8b/SharkEdge_4-80N.png/revision/latest?cb=20230812090329"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/SharkEdge_3-60LF",
+      "name_en": "SharkEdge 3-60LF",
+      "name_jp": "シャークエッジ3-60LF",
+      "product_code": "BX-RB1-P",
+      "type": "attack",
+      "line": "basic",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/7/7c/SharkEdge_3-60LF.png/revision/latest?cb=20230812090317"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/DranzerSpiral_3-80T",
+      "name_en": "DranzerSpiral 3-80T",
+      "name_jp": "ドランザースパイラル3-80T",
+      "product_code": "BX-XO1",
+      "type": "balance",
+      "line": "basic",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/1/12/DranzerSpiral_3-80T.jpeg/revision/latest?cb=20230607155824"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/ValkyrieVolt_S4-70V",
+      "name_en": "ValkyrieVolt S4-70V",
+      "name_jp": "ワルキューレボルトS4-70V",
+      "product_code": "BX-RB6",
+      "type": "attack",
+      "line": "custom",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/c/c4/ValkyrieVolt_S4-70V.png/revision/latest?cb=20250715031947"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/HellsChain_9-80O",
+      "name_en": "HellsChain 9-80O",
+      "name_jp": "ヘルズチェイン9-80O",
+      "product_code": "BX-RB3-1",
+      "type": "attack",
+      "line": "basic",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/8/86/HellsChain_9-80O.jpeg/revision/latest?cb=20240417121607"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/UnicornSting_3-70D",
+      "name_en": "UnicornSting 3-70D",
+      "name_jp": "ユニコーンスティング3-70D",
+      "product_code": "BX-RB4-1",
+      "type": "defense",
+      "line": "basic",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/0/07/UnicornSting_3-70D.jpeg/revision/latest?cb=20240624191250"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/PhoenixWing_5-80H",
+      "name_en": "PhoenixWing 5-80H",
+      "name_jp": "フェニックスウィング5-80H",
+      "product_code": "BX-RB4-2",
+      "type": "balance",
+      "line": "basic",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/0/02/PhoenixWing_5-80H.jpeg/revision/latest?cb=20240624191632"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/SphinxCowl_4-80HT",
+      "name_en": "SphinxCowl 4-80HT",
+      "name_jp": "スフィンクスカウル4-80HT",
+      "product_code": "BX-RBSC-1",
+      "type": "balance",
+      "line": "basic",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/9/9e/SphinxCowl_4-80HT.jpeg/revision/latest?cb=20240115035443"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/RhinoHorn_3-80S",
+      "name_en": "RhinoHorn 3-80S",
+      "name_jp": "ライノホーン3-80S",
+      "product_code": "BX-19",
+      "type": "defense",
+      "line": "basic",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/0/02/RhinoHorn_3-80S.jpeg/revision/latest?cb=20231013160027"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/DrigerSlash_4-80P",
+      "name_en": "DrigerSlash 4-80P",
+      "name_jp": "ドライガースラッシュ4-80P",
+      "product_code": "BX-XO2",
+      "type": "balance",
+      "line": "basic",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/c/c0/DrigerSlash_4-80P.jpeg/revision/latest?cb=20240324183648"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/SamuraiSteel_5-70GF",
+      "name_en": "SamuraiSteel 5-70GF",
+      "name_jp": "サムライスチール5-70GF",
+      "product_code": "BX-PR3",
+      "type": "attack",
+      "line": "basic",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/2/29/SamuraiSteel_5-70GF.jpg/revision/latest?cb=20250514082453"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/CrimsonGaruda_4-70TP",
+      "name_en": "CrimsonGaruda 4-70TP",
+      "name_jp": "クリムゾンガルーダ4-70TP",
+      "product_code": "BX-32",
+      "type": "balance",
+      "line": "basic",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/8/82/CrimsonGaruda_4-70TP.png/revision/latest?cb=20241015031136"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/LeonCrest_7-60GN",
+      "name_en": "LeonCrest 7-60GN",
+      "name_jp": "レオンクレスト7-60GN",
+      "product_code": "BX-29",
+      "type": "defense",
+      "line": "basic",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/4/46/LeonCrest_7-60GN.jpeg/revision/latest?cb=20240711160437"
+    },
+    {
+      "source_url": "https://beyblade.fandom.com/wiki/LeonClaw_3-80HN",
+      "name_en": "LeonClaw 3-80HN",
+      "name_jp": "レオンクロー3-80HN",
+      "product_code": "BX-RB2-1",
+      "type": "balance",
+      "line": "basic",
+      "image_url": "https://static.wikia.nocookie.net/beyblade/images/c/c0/LeonClaw_3-80HN.jpeg/revision/latest?cb=20231213161520"
+    }
+  ]
+}

@@ -109,7 +109,19 @@ export function KidDetailPage() {
       URL.revokeObjectURL(url);
       setSuccess(true);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Unbekannter Fehler');
+      const e = err as { message?: string; code?: string; hint?: string };
+      const msg =
+        e?.message ?? (typeof err === 'string' ? err : JSON.stringify(err));
+      const code = e?.code ? ` (${e.code})` : '';
+      const looksLikeJwtExpired =
+        /jwt|expired|invalid.*token/i.test(msg) || e?.code === 'PGRST301';
+      setError(
+        looksLikeJwtExpired
+          ? 'Session abgelaufen. Bitte neu einloggen.'
+          : `${msg}${code}`,
+      );
+      // eslint-disable-next-line no-console
+      console.error('Token regenerate failed:', err);
     } finally {
       setBusy(false);
     }

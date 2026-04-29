@@ -72,7 +72,21 @@ export function CreateKidPage() {
       URL.revokeObjectURL(url);
       nav('/werkstatt');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unbekannter Fehler');
+      // Supabase PostgrestError isn't `instanceof Error` — extract its fields explicitly.
+      const e = err as { message?: string; code?: string; hint?: string; details?: string };
+      const msg =
+        e?.message ?? (typeof err === 'string' ? err : JSON.stringify(err));
+      const code = e?.code ? ` (${e.code})` : '';
+      const hint = e?.hint ? ` — ${e.hint}` : '';
+      const looksLikeJwtExpired =
+        /jwt|expired|invalid.*token/i.test(msg) || e?.code === 'PGRST301';
+      setError(
+        looksLikeJwtExpired
+          ? 'Session abgelaufen. Bitte neu einloggen.'
+          : `${msg}${code}${hint}`,
+      );
+      // eslint-disable-next-line no-console
+      console.error('CreateKid failed:', err);
     } finally {
       setBusy(false);
     }

@@ -80,11 +80,22 @@ export function KidDetailPage() {
     setSuccess(false);
     try {
       const { token, tokenHash } = await generateToken();
-      const { error: updateError } = await supabase
+      // .select() so PostgREST returns the affected rows. Without this an UPDATE
+      // that's silently filtered out by RLS (e.g., expired admin JWT → no admin
+      // role claim → policy denies → 0 rows updated, NO error) returns success
+      // and we download a PDF whose token doesn't match the (still-old) hash.
+      // Verify rows-affected and throw if zero.
+      const { data: updated, error: updateError } = await supabase
         .from('kids')
         .update({ token_hash: tokenHash })
-        .eq('id', kid.id);
+        .eq('id', kid.id)
+        .select('id');
       if (updateError) throw updateError;
+      if (!updated || updated.length === 0) {
+        throw new Error(
+          'Karte konnte nicht aktualisiert werden. Bitte neu einloggen und nochmal versuchen.',
+        );
+      }
 
       const qrUrl = `${window.location.origin}/q/${token}`;
       const bey = await fetchPrimaryBey(kid.id);

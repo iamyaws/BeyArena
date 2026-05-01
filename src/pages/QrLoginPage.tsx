@@ -110,30 +110,15 @@ export function QrLoginPage() {
         useBarCodeDetectorIfSupported: true,
       });
       scannerRef.current = scanner;
+      // Simpler config — iOS Chrome (WKWebView) ignores or chokes on the
+      // function-form qrbox + videoConstraints.width.ideal combo. Static
+      // values and library-default video resolution are more portable.
       await scanner.start(
         { facingMode: 'environment' },
         {
-          // 15 fps for snappier detection on capable phones; library throttles
-          // down on slow ones automatically.
-          fps: 15,
-          // Function form so the qrbox follows the actual viewfinder size on
-          // device rotation / different phones — uses 75% of the smaller edge,
-          // which is generous enough that the QR doesn't have to be centered
-          // perfectly.
-          qrbox: (viewfinderW: number, viewfinderH: number) => {
-            const min = Math.min(viewfinderW, viewfinderH);
-            const size = Math.floor(min * 0.75);
-            return { width: size, height: size };
-          },
+          fps: 12,
+          qrbox: { width: 240, height: 240 },
           aspectRatio: 1.0,
-          // Higher resolution = more pixels per QR module = easier decode.
-          // Most phones support 1280×720 on the rear camera.
-          videoConstraints: {
-            facingMode: 'environment',
-            width: { ideal: 1280 },
-            height: { ideal: 720 },
-          },
-          // Try mirrored frames too — some phones report mirrored video.
           disableFlip: false,
         },
         async (decodedText) => {

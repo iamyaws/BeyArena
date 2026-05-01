@@ -4,6 +4,13 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 // https://vite.dev/config/
 export default defineConfig({
+  // Bind the dev server to all network interfaces so a phone on the same WiFi
+  // can hit it via the printed LAN URL ("Network: http://192.168.x.x:5173").
+  // Enables fast iteration without a Vercel deploy round-trip.
+  server: {
+    host: true,
+    port: 5173,
+  },
   build: {
     rollupOptions: {
       output: {
@@ -42,6 +49,13 @@ export default defineConfig({
         ],
       },
       workbox: {
+        // Activate new SW immediately so deploys land without users having to
+        // close all tabs. clientsClaim takes over open tabs after activation.
+        // cleanupOutdatedCaches evicts stale precache entries from previous
+        // builds so we don't leak storage forever.
+        skipWaiting: true,
+        clientsClaim: true,
+        cleanupOutdatedCaches: true,
         globPatterns: ['**/*.{js,css,html,png,svg,webp}'],
         runtimeCaching: [
           {

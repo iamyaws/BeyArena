@@ -15,6 +15,29 @@ const JWT_SECRET = Deno.env.get('JWT_SECRET')!;
 
 const supa = createClient(SUPABASE_URL, SERVICE_ROLE);
 
+// CORS for browser fetch from beyarena.vercel.app (and dev). Without these the
+// preflight OPTIONS gets a 405 from this function and Safari shows "Load failed".
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers':
+    'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Max-Age': '86400',
+};
+
+function withCors(body: BodyInit | null, init: ResponseInit = {}): Response {
+  const headers = new Headers(init.headers);
+  for (const [k, v] of Object.entries(CORS_HEADERS)) headers.set(k, v);
+  return new Response(body, { ...init, headers });
+}
+
+function jsonWithCors(payload: unknown, init: ResponseInit = {}): Response {
+  const headers = new Headers(init.headers);
+  for (const [k, v] of Object.entries(CORS_HEADERS)) headers.set(k, v);
+  headers.set('Content-Type', 'application/json');
+  return new Response(JSON.stringify(payload), { ...init, headers });
+}
+
 async function sha256Hex(input: string): Promise<string> {
   const buf = new TextEncoder().encode(input);
   const digest = await crypto.subtle.digest('SHA-256', buf);
@@ -22,10 +45,15 @@ async function sha256Hex(input: string): Promise<string> {
 }
 
 Deno.serve(async (req) => {
-  if (req.method !== 'POST') return new Response('method not allowed', { status: 405 });
+  if (req.method === 'OPTIONS') {
+    return withCors(null, { status: 204 });
+  }
+  if (req.method !== 'POST') {
+    return withCors('method not allowed', { status: 405 });
+  }
   const { token } = await req.json().catch(() => ({}));
   if (!token || typeof token !== 'string') {
-    return new Response(JSON.stringify({ error: 'missing token' }), { status: 400 });
+    return jsonWithCors({ error: 'missing token' }, { status: 400 });
   }
 
   const tokenHash = await sha256Hex(token);
@@ -36,7 +64,7 @@ Deno.serve(async (req) => {
     .single();
 
   if (error || !kid) {
-    return new Response(JSON.stringify({ error: 'invalid token' }), { status: 401 });
+    return jsonWithCors({ error: 'invalid token' }, { status: 401 });
   }
 
   // Sign custom JWT with kid_id claim. Supabase project JWT secret is a UTF-8
@@ -60,5 +88,5 @@ Deno.serve(async (req) => {
     key,
   );
 
-  return Response.json({ jwt, kid });
+  return jsonWithCors({ jwt, kid });
 });

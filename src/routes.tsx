@@ -80,6 +80,11 @@ export function AppRoutes() {
           </KidRoute>
         }
       />
+      {/* Both routes render the same component; QrLoginPage detects token absence
+          via useParams() and shows the "Karte hier hin" idle state when missing.
+          Without the /q variant, KidRoute's redirect-to-/q would land on a blank
+          page. */}
+      <Route path="/q" element={<QrLoginPage />} />
       <Route path="/q/:token" element={<QrLoginPage />} />
       <Route path="/admin/login" element={<AdminLoginPage />} />
       <Route

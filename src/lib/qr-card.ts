@@ -583,11 +583,14 @@ async function drawBack(
     color: rgb(1, 1, 1),
   });
 
-  // Embed QR code (high contrast, large render → scales down crisply)
+  // Embed QR code. margin: 4 modules = required white quiet zone so phone scanners
+  // can lock on (margin: 0 produced unscannable codes against the design's black
+  // border). errorCorrectionLevel: 'H' = 30% redundancy — important for print where
+  // ink bleed, fold creases, fingerprints can corrupt cells.
   const qrDataUrl = await QRCode.toDataURL(input.qrUrl, {
     width: 600,
-    margin: 0,
-    errorCorrectionLevel: 'M',
+    margin: 4,
+    errorCorrectionLevel: 'H',
     color: { dark: '#000000', light: '#FFFFFF' },
   });
   const qrBytes = dataUrlToBytes(qrDataUrl);

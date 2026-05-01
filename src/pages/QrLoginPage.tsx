@@ -264,9 +264,14 @@ export function QrLoginPage() {
           <button
             className="bx-btn bx-btn-yellow"
             style={{ width: '100%', fontSize: 17, padding: '16px' }}
-            onClick={() => nav('/', { replace: true })}
+            onClick={() => {
+              // Go to the no-token idle state so the kid can re-scan a different card.
+              // We deliberately do NOT navigate to '/' — that's KidRoute-protected and
+              // would bounce them to /admin/login, which kids don't have access to.
+              nav('/q', { replace: true });
+            }}
           >
-            ⚡ Nochmal probieren
+            ⚡ Nochmal scannen
           </button>
         ) : (
           <button
@@ -279,10 +284,11 @@ export function QrLoginPage() {
         )}
       </div>
 
-      {/* Footer */}
+      {/* Footer — admin login link removed. Kids see this page; admin reaches their
+          login via the dedicated /admin/login URL only (not exposed in kid UI). */}
       <div className="flex-1" />
       <div
-        className="flex justify-between items-center"
+        className="flex justify-end items-center"
         style={{
           padding: '10px 24px 28px',
           fontSize: 11,
@@ -290,13 +296,6 @@ export function QrLoginPage() {
         }}
       >
         <span className="bx-mono">v0.4 · OFFLINE-OK</span>
-        <a
-          href="/admin/login"
-          className="bx-mono"
-          style={{ color: 'rgba(255,255,255,0.45)' }}
-        >
-          Werkstatt-Login →
-        </a>
       </div>
     </div>
   );

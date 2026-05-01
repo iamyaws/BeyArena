@@ -11,7 +11,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Html5Qrcode } from 'html5-qrcode';
+import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode';
 import { useAuth } from '../hooks/useAuth';
 
 type LoginState =
@@ -98,20 +98,58 @@ export function QrLoginPage() {
     // Wait one tick for React to render the target div
     await new Promise((r) => setTimeout(r, 50));
     try {
-      const scanner = new Html5Qrcode(READER_ID, /* verbose */ false);
+      // formatsToSupport: QR_CODE only — much faster + fewer false positives
+      //   than the default "scan everything" mode.
+      // useBarCodeDetectorIfSupported: lets html5-qrcode delegate to the native
+      //   BarcodeDetector API (Chrome on Android, recent macOS Safari) which is
+      //   dramatically more accurate than the JS-based ZXing fallback. Falls
+      //   back automatically when the API isn't there.
+      const scanner = new Html5Qrcode(READER_ID, {
+        verbose: false,
+        formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE],
+        useBarCodeDetectorIfSupported: true,
+      });
       scannerRef.current = scanner;
       await scanner.start(
         { facingMode: 'environment' },
         {
-          fps: 10,
-          qrbox: { width: 220, height: 220 },
+          // 15 fps for snappier detection on capable phones; library throttles
+          // down on slow ones automatically.
+          fps: 15,
+          // Function form so the qrbox follows the actual viewfinder size on
+          // device rotation / different phones — uses 75% of the smaller edge,
+          // which is generous enough that the QR doesn't have to be centered
+          // perfectly.
+          qrbox: (viewfinderW: number, viewfinderH: number) => {
+            const min = Math.min(viewfinderW, viewfinderH);
+            const size = Math.floor(min * 0.75);
+            return { width: size, height: size };
+          },
           aspectRatio: 1.0,
+          // Higher resolution = more pixels per QR module = easier decode.
+          // Most phones support 1280×720 on the rear camera.
+          videoConstraints: {
+            facingMode: 'environment',
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+          },
+          // Try mirrored frames too — some phones report mirrored video.
+          disableFlip: false,
         },
         async (decodedText) => {
           // Decoded — try to extract a token. Library may keep firing; we stop
           // the camera before exchanging so we don't double-fire.
+          // eslint-disable-next-line no-console
+          console.log('QR decoded:', decodedText);
           const t = extractTokenFromQrPayload(decodedText);
-          if (!t) return; // unknown QR, keep scanning
+          if (!t) {
+            // eslint-disable-next-line no-console
+            console.warn(
+              'QR did not match /q/<token> pattern; keep scanning. Decoded:',
+              decodedText,
+            );
+            return;
+          }
           try {
             await scanner.stop();
           } catch {

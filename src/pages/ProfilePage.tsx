@@ -9,7 +9,7 @@
 //   - useAllKids() for the climb hint ("Mila ist 3 Etagen über dir")
 //   - useKidBeys() + useAllBeys() for the collection grid (locked + owned)
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCurrentKid, useAllKids } from '../hooks/useKid';
 import { useFeed } from '../hooks/useBattles';
@@ -71,10 +71,22 @@ export function ProfilePage() {
     );
   }
   if (error || !kid) {
+    // Map specific failure modes to kid-friendly copy per HIG — name the
+    // cause AND a next step. Same pattern as HomePage / QrLoginPage.
+    const raw = error instanceof Error ? error.message : '';
+    let kidMsg = 'Wir konnten dich nicht finden. Frag Marc nach einer neuen Karte.';
+    if (/JWT|expired|exp\b/i.test(raw)) {
+      kidMsg = 'Du bist zu lange weg gewesen. Scan deine Karte nochmal.';
+    } else if (/Failed to fetch|Load failed|NetworkError|fetch/i.test(raw)) {
+      kidMsg = 'Kein Internet. Versuch\'s gleich nochmal.';
+    }
     return (
       <div
         className="bx min-h-screen w-full flex items-center justify-center"
-        style={{ background: 'var(--bx-ink)', padding: 32 }}
+        style={{
+          background: 'var(--bx-ink)',
+          padding: 'max(32px, calc(env(safe-area-inset-top) + 24px)) 32px max(32px, calc(env(safe-area-inset-bottom) + 24px))',
+        }}
       >
         <div style={{ textAlign: 'center', maxWidth: 320 }}>
           <div className="bx-display" style={{ fontSize: 28, color: 'var(--bx-crimson)' }}>
@@ -84,7 +96,7 @@ export function ProfilePage() {
             className="bx-mono"
             style={{ marginTop: 12, fontSize: 12, color: 'var(--bx-mute)' }}
           >
-            Wir konnten dich nicht finden. Frag Marc nach einer neuen Karte.
+            {kidMsg}
           </p>
         </div>
       </div>
@@ -126,12 +138,12 @@ export function ProfilePage() {
         paddingBottom: 100,
       }}
     >
-      {/* Top bar */}
+      {/* Top bar — top padding respects iPhone notch via safe-area-inset-top. */}
       <div
         className="sticky z-10 flex items-center justify-between"
         style={{
           top: 0,
-          padding: '12px 18px',
+          padding: 'max(12px, calc(env(safe-area-inset-top) + 6px)) 18px 12px',
           background:
             'linear-gradient(to bottom, rgba(7,7,10,0.9), rgba(7,7,10,0))',
         }}
@@ -141,8 +153,9 @@ export function ProfilePage() {
           onClick={() => nav('/')}
           aria-label="Schließen"
           style={{
-            width: 36,
-            height: 36,
+            // 44pt minimum tap target per HIG.
+            width: 44,
+            height: 44,
             borderRadius: 12,
             background: 'rgba(255,255,255,0.06)',
             border: '1px solid rgba(255,255,255,0.08)',
@@ -202,7 +215,7 @@ export function ProfilePage() {
         </div>
       )}
 
-      {/* Tabs */}
+      {/* Tabs — 44pt min tap target per HIG. */}
       <div className="px-[18px] pt-5">
         <div
           className="flex"
@@ -223,9 +236,11 @@ export function ProfilePage() {
             <button
               key={t.id}
               onClick={() => setTab(t.id)}
+              aria-pressed={tab === t.id}
               style={{
                 flex: 1,
-                padding: '8px 4px',
+                minHeight: 40,
+                padding: '0 4px',
                 borderRadius: 8,
                 border: 'none',
                 fontFamily: 'Saira Stencil One, sans-serif',
@@ -405,11 +420,20 @@ function BattlesList({
 }) {
   if (battles.length === 0) {
     return (
-      <div
-        className="px-[18px] pt-3.5 text-center"
-        style={{ color: 'var(--bx-mute)', fontSize: 13, padding: 30 }}
-      >
-        Noch keine Kämpfe.
+      <div className="px-[18px] pt-3.5">
+        <div
+          className="bx-card text-center"
+          style={{
+            padding: 24,
+            color: 'var(--bx-mute)',
+            fontSize: 13,
+            lineHeight: 1.45,
+          }}
+        >
+          Noch keine Kämpfe. Tipp auf den{' '}
+          <span style={{ color: 'var(--bx-yellow)', fontWeight: 700 }}>⚔</span>{' '}
+          unten rechts.
+        </div>
       </div>
     );
   }
@@ -462,11 +486,24 @@ function BattlesList({
 
 // ───────────────────────────────────────────────────────────────
 // Bey detail sheet — full-width bottom sheet that slides up.
+// HIG: backdrop tap dismisses; ESC dismisses on desktop.
 // ───────────────────────────────────────────────────────────────
 function BeyDetailSheet({ bey, onClose }: { bey: DbBey; onClose: () => void }) {
+  // ESC dismiss on desktop. Mobile users use the backdrop tap or the
+  // explicit "Schließen" button.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onClose]);
+
   return (
     <div
       onClick={onClose}
+      role="dialog"
+      aria-modal="true"
       className="fixed inset-0 z-50 flex items-end"
       style={{ background: 'rgba(0,0,0,0.7)' }}
     >
@@ -477,7 +514,9 @@ function BeyDetailSheet({ bey, onClose }: { bey: DbBey; onClose: () => void }) {
           background: '#13141b',
           borderTop: '1px solid rgba(255,255,255,0.08)',
           borderRadius: '24px 24px 0 0',
-          padding: 24,
+          // Bottom padding respects iPhone home indicator via
+          // safe-area-inset-bottom.
+          padding: '24px 24px max(24px, calc(env(safe-area-inset-bottom) + 16px))',
         }}
       >
         <div
@@ -522,8 +561,9 @@ function BeyDetailSheet({ bey, onClose }: { bey: DbBey; onClose: () => void }) {
         </div>
         <button
           onClick={onClose}
+          aria-label="Schließen"
           className="bx-btn bx-btn-ghost"
-          style={{ width: '100%', marginTop: 16 }}
+          style={{ width: '100%', marginTop: 16, minHeight: 44 }}
         >
           schließen
         </button>

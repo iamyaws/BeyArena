@@ -50,10 +50,23 @@ export function PublicProfilePage() {
     );
   }
   if (error || !kid) {
+    // Map known shapes to kid-friendly copy per HIG.
+    const raw = error instanceof Error ? error.message : '';
+    let kidMsg = 'Diesen Spieler gibt\'s nicht.';
+    if (/JWT|expired|exp\b/i.test(raw)) {
+      kidMsg = 'Du bist zu lange weg gewesen. Scan deine Karte nochmal.';
+    } else if (/Failed to fetch|Load failed|NetworkError|fetch/i.test(raw)) {
+      kidMsg = 'Kein Internet. Versuch\'s gleich nochmal.';
+    } else if (/PGRST116|not.found|404/i.test(raw)) {
+      kidMsg = 'Diesen Spieler gibt\'s nicht.';
+    }
     return (
       <div
         className="bx min-h-screen w-full flex items-center justify-center"
-        style={{ background: 'var(--bx-ink)', padding: 32 }}
+        style={{
+          background: 'var(--bx-ink)',
+          padding: 'max(32px, calc(env(safe-area-inset-top) + 24px)) 32px max(32px, calc(env(safe-area-inset-bottom) + 24px))',
+        }}
       >
         <div style={{ textAlign: 'center', maxWidth: 320 }}>
           <div className="bx-display" style={{ fontSize: 28, color: 'var(--bx-crimson)' }}>
@@ -63,7 +76,7 @@ export function PublicProfilePage() {
             className="bx-mono"
             style={{ marginTop: 12, fontSize: 12, color: 'var(--bx-mute)' }}
           >
-            Spieler nicht gefunden.
+            {kidMsg}
           </p>
         </div>
       </div>
@@ -96,9 +109,12 @@ export function PublicProfilePage() {
         paddingBottom: 24,
       }}
     >
+      {/* Top padding respects iPhone notch via safe-area-inset-top. */}
       <div
         className="flex items-center justify-between"
-        style={{ padding: '12px 18px' }}
+        style={{
+          padding: 'max(12px, calc(env(safe-area-inset-top) + 6px)) 18px 12px',
+        }}
       >
         <div className="bx-eyebrow">Spieler-Karte</div>
       </div>
@@ -128,9 +144,11 @@ export function PublicProfilePage() {
             <button
               key={t.id}
               onClick={() => setTab(t.id)}
+              aria-pressed={tab === t.id}
               style={{
                 flex: 1,
-                padding: '8px 4px',
+                minHeight: 40,
+                padding: '0 4px',
                 borderRadius: 8,
                 border: 'none',
                 fontFamily: 'Saira Stencil One, sans-serif',
@@ -230,10 +248,15 @@ export function PublicProfilePage() {
         <div className="px-[18px] pt-3.5">
           {myBattles.length === 0 && (
             <div
-              className="text-center"
-              style={{ color: 'var(--bx-mute)', fontSize: 13, padding: 30 }}
+              className="bx-card text-center"
+              style={{
+                color: 'var(--bx-mute)',
+                fontSize: 13,
+                padding: 24,
+                lineHeight: 1.45,
+              }}
             >
-              Noch keine Kämpfe.
+              {kid.display_name} hat noch nicht gekämpft.
             </div>
           )}
           {myBattles.map((b) => {

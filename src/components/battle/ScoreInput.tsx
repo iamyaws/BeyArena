@@ -38,7 +38,7 @@ export function ScoreInput() {
           className="bx-display"
           style={{ fontSize: 26, marginTop: 8, lineHeight: 1 }}
         >
-          Wie ist&apos;s ausgegangen?
+          Wer hat gewonnen?
         </div>
       </div>
 
@@ -189,6 +189,7 @@ export function ScoreInput() {
             ].map(([a, b]) => (
               <button
                 key={`${a}-${b}`}
+                aria-label={`Score ${a} zu ${b}`}
                 onClick={() => {
                   if (iWon) {
                     setMy(a);
@@ -200,13 +201,15 @@ export function ScoreInput() {
                 }}
                 style={{
                   flex: 1,
-                  padding: '8px 0',
+                  // 44pt min tap height per HIG — was 30px (8+8+text).
+                  minHeight: 44,
+                  padding: 0,
                   borderRadius: 8,
                   background: 'rgba(255,255,255,0.05)',
                   border: '1px solid rgba(255,255,255,0.08)',
                   color: '#fff',
                   fontFamily: 'JetBrains Mono, monospace',
-                  fontSize: 11,
+                  fontSize: 12,
                   cursor: 'pointer',
                 }}
               >
@@ -224,15 +227,17 @@ export function ScoreInput() {
   );
 }
 
+// 44×44 minimum tap target per HIG. The score steppers were the worst
+// offender on this flow — easy mis-tap when adjusting kid scores.
 const stepperBtnStyle = {
-  width: 32,
-  height: 32,
-  borderRadius: 10,
+  width: 44,
+  height: 44,
+  borderRadius: 12,
   background: 'rgba(255,255,255,0.06)',
   border: '1px solid rgba(255,255,255,0.08)',
   color: '#fff',
   cursor: 'pointer',
-  fontSize: 16,
+  fontSize: 20,
   fontFamily: 'Saira Stencil One, sans-serif',
 } as const;
 
@@ -296,7 +301,9 @@ function FooterCTA({
     <div
       className="fixed left-0 right-0 bottom-0"
       style={{
-        padding: '14px 18px 22px',
+        // Bottom padding respects iPhone home indicator via
+        // safe-area-inset-bottom.
+        padding: '14px 18px max(22px, calc(env(safe-area-inset-bottom) + 12px))',
         background: 'linear-gradient(to top, var(--bx-ink) 60%, transparent)',
         zIndex: 5,
       }}

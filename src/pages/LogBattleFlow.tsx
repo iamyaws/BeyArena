@@ -50,17 +50,20 @@ export function LogBattleFlow() {
       className="bx min-h-screen w-full flex flex-col relative overflow-hidden"
       style={{ background: 'var(--bx-ink)' }}
     >
-      {/* Top bar */}
+      {/* Top bar — top padding respects iPhone notch via safe-area-inset-top.
+          Back/Close tap targets are 44×44 per HIG min. */}
       <div
         className="flex items-center justify-between"
-        style={{ padding: '12px 18px' }}
+        style={{
+          padding: 'max(12px, calc(env(safe-area-inset-top) + 6px)) 18px 12px',
+        }}
       >
         <button
           onClick={handleBack}
           aria-label="Zurück"
           style={{
-            width: 36,
-            height: 36,
+            width: 44,
+            height: 44,
             borderRadius: 12,
             background: 'rgba(255,255,255,0.06)',
             border: '1px solid rgba(255,255,255,0.08)',
@@ -85,8 +88,8 @@ export function LogBattleFlow() {
           onClick={handleClose}
           aria-label="Abbrechen"
           style={{
-            width: 36,
-            height: 36,
+            width: 44,
+            height: 44,
             borderRadius: 12,
             background: 'rgba(255,255,255,0.06)',
             border: '1px solid rgba(255,255,255,0.08)',

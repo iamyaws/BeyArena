@@ -55,7 +55,9 @@ export function BeyPicker() {
       <div
         className="fixed left-0 right-0 bottom-0"
         style={{
-          padding: '14px 18px 22px',
+          // Bottom padding respects iPhone home indicator via
+          // safe-area-inset-bottom.
+          padding: '14px 18px max(22px, calc(env(safe-area-inset-bottom) + 12px))',
           background:
             'linear-gradient(to top, var(--bx-ink) 60%, transparent)',
           zIndex: 5,

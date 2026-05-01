@@ -51,16 +51,34 @@ export function LogBattleConfirm() {
     ) {
       return;
     }
-    await log.mutateAsync({
-      opponent_kid_id: draft.opponent_kid_id,
-      i_won: draft.i_won,
-      my_score: draft.my_score,
-      opp_score: draft.opp_score,
-      my_bey_id: draft.my_bey_id ?? null,
-      opp_bey_id: draft.opp_bey_id ?? null,
-    });
-    reset();
-    nav('/');
+    try {
+      await log.mutateAsync({
+        opponent_kid_id: draft.opponent_kid_id,
+        i_won: draft.i_won,
+        my_score: draft.my_score,
+        opp_score: draft.opp_score,
+        my_bey_id: draft.my_bey_id ?? null,
+        opp_bey_id: draft.opp_bey_id ?? null,
+      });
+      // Per Apple HIG: judicious haptic on success moments. Confirms the
+      // battle landed even if the kid's eyes are still on the score.
+      // navigator.vibrate is iOS Safari (16.4+) + most Android — falls
+      // through silently on browsers that don't honor it.
+      try {
+        if (typeof navigator.vibrate === 'function') {
+          navigator.vibrate(15);
+        }
+      } catch {
+        /* not all browsers honor this; non-essential */
+      }
+      reset();
+      nav('/');
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error('Battle log failed:', e);
+      // Mutation already throws into react-query state — the parent's
+      // log.isError can show details; for now we just let the user retry.
+    }
   }
 
   return (
@@ -235,10 +253,44 @@ export function LogBattleConfirm() {
         </div>
       </div>
 
+      {/* Error toast — surfaces network/auth errors in kid-friendly German.
+          Sits inline above the footer so the kid sees it without scrolling. */}
+      {log.isError && (
+        <div className="px-[18px] pt-3">
+          <div
+            className="bx-card"
+            style={{
+              padding: 12,
+              background: 'rgba(220,38,38,0.1)',
+              borderColor: 'rgba(220,38,38,0.4)',
+              fontSize: 12,
+              lineHeight: 1.45,
+              color: 'rgba(255,255,255,0.85)',
+            }}
+          >
+            {(() => {
+              const raw = log.error instanceof Error ? log.error.message : '';
+              if (/Failed to fetch|Load failed|NetworkError|fetch/i.test(raw)) {
+                return 'Kein Internet. Versuch\'s gleich nochmal.';
+              }
+              if (/JWT|expired|exp\b/i.test(raw)) {
+                return 'Du bist zu lange weg gewesen. Scan deine Karte nochmal.';
+              }
+              if (/permission|denied|RLS|auth/i.test(raw)) {
+                return 'Das ging gerade nicht. Frag Marc.';
+              }
+              return 'Hat nicht geklappt. Tipp nochmal.';
+            })()}
+          </div>
+        </div>
+      )}
+
       <div
         className="fixed left-0 right-0 bottom-0"
         style={{
-          padding: '14px 18px 22px',
+          // Bottom padding respects iPhone home indicator via
+          // safe-area-inset-bottom.
+          padding: '14px 18px max(22px, calc(env(safe-area-inset-bottom) + 12px))',
           background:
             'linear-gradient(to top, var(--bx-ink) 60%, transparent)',
           zIndex: 5,
@@ -253,6 +305,7 @@ export function LogBattleConfirm() {
             padding: '16px',
             fontSize: 16,
             opacity: log.isPending ? 0.6 : 1,
+            cursor: log.isPending ? 'wait' : 'pointer',
           }}
         >
           {log.isPending ? 'Sende…' : '⚔ Eintragen'}

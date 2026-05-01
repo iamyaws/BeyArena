@@ -5,6 +5,18 @@
 /* BeyArena — German kids' Beyblade X battle tracker */
 /* Hi-fi design tokens, dark arcade-tournament aesthetic */
 
+/* Apple HIG: respect motion preferences. Sweep / pulse / spin animations
+   freeze for users with prefers-reduced-motion (accessibility setting also
+   used by anyone who finds them distracting). */
+@media (prefers-reduced-motion: reduce) {
+  .bx-spin,
+  .bx-spin-fast,
+  .bx-pulse,
+  .bx-sweep {
+    animation: none !important;
+  }
+}
+
 :root {
   --bx-yellow: #fde047;
   --bx-yellow-deep: #eab308;

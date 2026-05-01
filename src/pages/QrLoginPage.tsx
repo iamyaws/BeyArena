@@ -161,6 +161,16 @@ export function QrLoginPage() {
             /* ignore */
           }
           scannerRef.current = null;
+          // Per Apple HIG: judicious haptic on success moments. Short pulse
+          // confirms the scan worked even if the kid's eyes are still on the
+          // card. navigator.vibrate is iOS Safari (16.4+) + most Android.
+          try {
+            if (typeof navigator.vibrate === 'function') {
+              navigator.vibrate(15);
+            }
+          } catch {
+            /* not all browsers honor this; non-essential */
+          }
           await handleScannedToken(t);
         },
         () => {
@@ -168,15 +178,30 @@ export function QrLoginPage() {
         },
       );
     } catch (e) {
-      // Common failures: NotAllowedError (permission denied),
-      // NotFoundError (no camera), NotReadableError (camera busy)
-      const msg =
-        e instanceof Error && e.message
+      // Map specific failure modes to kid-friendly copy per Apple HIG —
+      // name the cause AND the next step. html5-qrcode rejects with both
+      // Error instances and plain strings, so we coerce to text first.
+      const raw =
+        e instanceof Error
           ? e.message
-          : 'kamera nicht verfügbar';
+          : typeof e === 'string'
+            ? e
+            : JSON.stringify(e);
+      let kidMsg = 'Kamera nicht verfügbar';
+      if (/NotAllowed|Permission/i.test(raw)) {
+        kidMsg = 'Tipp auf "Erlauben" wenn das Handy fragt';
+      } else if (/NotFound/i.test(raw)) {
+        kidMsg = 'Keine Kamera am Handy gefunden';
+      } else if (/NotReadable|in use|busy/i.test(raw)) {
+        kidMsg = 'Eine andere App benutzt gerade die Kamera';
+      } else if (/Overconstrained|track/i.test(raw)) {
+        kidMsg = 'Diese Kamera mag nicht. Versuch es nochmal.';
+      } else if (/secure/i.test(raw)) {
+        kidMsg = 'Die Kamera braucht eine sichere Verbindung (https)';
+      }
       // eslint-disable-next-line no-console
-      console.error('Camera start failed:', e);
-      setErrorMsg(msg);
+      console.error('Camera start failed:', e, '— mapped to:', kidMsg);
+      setErrorMsg(kidMsg);
       setState('error');
       const s = scannerRef.current;
       if (s) {
@@ -237,8 +262,13 @@ export function QrLoginPage() {
         }}
       />
 
-      {/* Header */}
-      <div className="relative" style={{ padding: '64px 24px 0' }}>
+      {/* Header — top padding respects iPhone notch via safe-area-inset-top
+          (HIG iOS guidance). max() floors at 64px so non-notch devices keep
+          the same generous breathing room. */}
+      <div
+        className="relative"
+        style={{ padding: 'max(64px, calc(env(safe-area-inset-top) + 32px)) 24px 0' }}
+      >
         <div className="bx-eyebrow flex items-center gap-2">
           <span
             className="bx-pulse"
@@ -542,7 +572,8 @@ export function QrLoginPage() {
       <div
         className="flex justify-end items-center"
         style={{
-          padding: '10px 24px 28px',
+          padding:
+            '10px 24px max(28px, calc(env(safe-area-inset-bottom) + 12px))',
           fontSize: 11,
           color: 'rgba(255,255,255,0.35)',
         }}

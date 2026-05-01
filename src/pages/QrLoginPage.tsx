@@ -92,6 +92,47 @@ export function QrLoginPage() {
 
   const startCamera = useCallback(async () => {
     setErrorMsg(null);
+
+    // iOS Chrome quirk: html5-qrcode's internal getUserMedia call doesn't
+    // reliably trigger the iOS permission prompt — the user clicks "Karte
+    // scannen" and nothing happens (no prompt, no camera). Workaround: do
+    // an EXPLICIT getUserMedia preflight BEFORE handing off to the library.
+    // This is the call that iOS Chrome's WKWebView accepts as a permission
+    // request. Once granted, html5-qrcode reuses the permission seamlessly.
+    if (typeof navigator.mediaDevices?.getUserMedia !== 'function') {
+      // eslint-disable-next-line no-console
+      console.error('navigator.mediaDevices.getUserMedia not available');
+      setErrorMsg(
+        'Dein Browser kann die Kamera nicht. Probier Safari oder Chrome.',
+      );
+      setState('error');
+      return;
+    }
+    try {
+      const preflightStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'environment' },
+      });
+      // Stop the preflight stream immediately — html5-qrcode opens its own.
+      preflightStream.getTracks().forEach((t) => t.stop());
+    } catch (e) {
+      const raw = e instanceof Error ? e.message : String(e);
+      let kidMsg = 'Kamera nicht verfügbar';
+      if (/NotAllowed|Permission/i.test(raw)) {
+        kidMsg = 'Tipp auf "Erlauben" wenn das Handy fragt';
+      } else if (/NotFound/i.test(raw)) {
+        kidMsg = 'Keine Kamera am Handy gefunden';
+      } else if (/NotReadable|in use|busy/i.test(raw)) {
+        kidMsg = 'Eine andere App benutzt gerade die Kamera';
+      } else if (/secure/i.test(raw)) {
+        kidMsg = 'Die Kamera braucht eine sichere Verbindung (https)';
+      }
+      // eslint-disable-next-line no-console
+      console.error('Camera preflight failed:', e, '— mapped to:', kidMsg);
+      setErrorMsg(kidMsg);
+      setState('error');
+      return;
+    }
+
     // Move to camera-scanning so the viewfinder div mounts, THEN start the camera
     // (Html5Qrcode needs the target div in the DOM).
     setState('camera-scanning');
@@ -322,10 +363,37 @@ export function QrLoginPage() {
             />
           )}
           <style>{`
+            /* html5-qrcode injects a __scan_region wrapper + a <video> + a
+               __dashboard footer. Force every nested element to fill our
+               viewfinder so the camera feed centers and covers, instead of
+               sitting in the top-left with margins. */
+            #${READER_ID},
+            #${READER_ID} > div,
+            #${READER_ID} > div > div {
+              position: absolute;
+              inset: 0;
+              width: 100% !important;
+              height: 100% !important;
+              padding: 0 !important;
+              border: 0 !important;
+              background: transparent !important;
+            }
             #${READER_ID} video {
+              position: absolute;
+              inset: 0;
               width: 100% !important;
               height: 100% !important;
               object-fit: cover;
+              background: #000;
+            }
+            /* Hide the library's own dashboard / info text / permission button
+               — we provide our own chrome via the corner brackets + sweep. */
+            #${READER_ID} #${READER_ID}__dashboard,
+            #${READER_ID} #${READER_ID}__header_message,
+            #${READER_ID} > img,
+            #${READER_ID} > span,
+            #${READER_ID} button[id*="${READER_ID}"] {
+              display: none !important;
             }
           `}</style>
 

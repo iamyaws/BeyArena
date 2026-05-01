@@ -63,11 +63,22 @@ export function BattleCard({ b }: { b: Battle }) {
         </div>
       </div>
       {b.status === 'pending' && (
-        <div className="flex justify-end mt-2">
+        <div className="flex justify-end mt-1">
+          {/* HIG 44pt minimum: pad the otherwise tiny "stimmt nicht" link
+              up so it's tappable. Visual stays small with mono caps. */}
           <button
             onClick={() => setShowDispute(true)}
+            aria-label="Diese Schlacht melden"
             className="bx-mono"
-            style={{ fontSize: 10, color: 'var(--bx-crimson)' }}
+            style={{
+              minHeight: 44,
+              padding: '0 8px',
+              fontSize: 10,
+              color: 'var(--bx-crimson)',
+              cursor: 'pointer',
+              background: 'transparent',
+              border: 'none',
+            }}
           >
             🚩 stimmt nicht
           </button>

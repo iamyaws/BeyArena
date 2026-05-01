@@ -39,10 +39,25 @@ export function HomePage() {
     );
   }
   if (error || !kid) {
+    // Map specific failure modes to kid-friendly copy per Apple HIG —
+    // name the cause AND the next step. Kids can't read JWT/network jargon
+    // so collapse everything into "scan again" / "ask Marc".
+    const raw = error instanceof Error ? error.message : '';
+    let kidMsg = 'Wir konnten dich nicht finden. Frag Marc nach einer neuen Karte.';
+    if (/JWT|expired|exp\b/i.test(raw)) {
+      kidMsg = 'Du bist zu lange weg gewesen. Scan deine Karte nochmal.';
+    } else if (/Failed to fetch|Load failed|NetworkError|fetch/i.test(raw)) {
+      kidMsg = 'Kein Internet. Versuch\'s gleich nochmal.';
+    } else if (/permission|denied|RLS|auth/i.test(raw)) {
+      kidMsg = 'Diese Karte geht nicht mehr. Frag Marc nach einer neuen.';
+    }
     return (
       <div
         className="bx min-h-screen w-full flex items-center justify-center"
-        style={{ background: 'var(--bx-ink)', padding: 32 }}
+        style={{
+          background: 'var(--bx-ink)',
+          padding: 'max(32px, calc(env(safe-area-inset-top) + 24px)) 32px max(32px, calc(env(safe-area-inset-bottom) + 24px))',
+        }}
       >
         <div style={{ textAlign: 'center', maxWidth: 320 }}>
           <div className="bx-display" style={{ fontSize: 28, color: 'var(--bx-crimson)' }}>
@@ -52,7 +67,7 @@ export function HomePage() {
             className="bx-mono"
             style={{ marginTop: 12, fontSize: 12, color: 'var(--bx-mute)' }}
           >
-            Wir konnten dich nicht finden. Frag Marc nach einer neuen Karte.
+            {kidMsg}
           </p>
         </div>
       </div>
@@ -86,15 +101,26 @@ export function HomePage() {
         paddingBottom: 24,
       }}
     >
-      {/* Top bar — eyebrow */}
-      <div className="px-5 pt-4 flex items-center justify-between">
+      {/* Top bar — eyebrow. Top padding respects iPhone notch via
+          safe-area-inset-top (HIG iOS guidance); max() floors at 16px on
+          non-notch devices. */}
+      <div
+        className="px-5 flex items-center justify-between"
+        style={{
+          paddingTop: 'max(16px, calc(env(safe-area-inset-top) + 8px))',
+        }}
+      >
         <div className="bx-eyebrow">Heute · Saison 04</div>
         <Link
           to="/profil"
+          aria-label="Meine Karte"
           className="flex items-center justify-center"
           style={{
-            width: 36,
-            height: 36,
+            // 44×44 minimum tap target per HIG. Visual avatar stays 26px;
+            // we pad the surrounding tap area out to 44 instead of growing
+            // the visible chip.
+            width: 44,
+            height: 44,
             borderRadius: 12,
             background: 'rgba(255,255,255,0.06)',
             border: '1px solid rgba(255,255,255,0.08)',
@@ -220,7 +246,7 @@ export function HomePage() {
             className="bx-card text-center"
             style={{ padding: 20, color: 'var(--bx-mute)', fontSize: 13 }}
           >
-            Noch nichts heute. Trag deine erste Schlacht ein.
+            Noch keine Kämpfe. Tipp auf <strong style={{ color: 'var(--bx-yellow)' }}>Was war heute?</strong>
           </div>
         )}
         {feed.slice(0, 3).map((b) => (

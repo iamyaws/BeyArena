@@ -1,5 +1,9 @@
 // BottomNav — fixed nav with the BX bottom-nav glass treatment.
 // Layout matches .design-handoff/project/player.jsx (BottomNav).
+// Apple HIG: bottom inset must clear the iPhone home indicator. We use
+// max(24px, env(safe-area-inset-bottom)) so non-notch devices still get
+// generous breathing room AND iPhones don't drop the labels behind the
+// indicator. Each tab is also padded to 44pt min tap height.
 
 import { NavLink } from 'react-router-dom';
 
@@ -17,7 +21,7 @@ export function BottomNav() {
       style={{
         gridTemplateColumns: 'repeat(4, 1fr)',
         paddingTop: 8,
-        paddingBottom: 24,
+        paddingBottom: 'max(8px, env(safe-area-inset-bottom))',
       }}
     >
       {TABS.map((t) => (
@@ -25,12 +29,20 @@ export function BottomNav() {
           key={t.to}
           to={t.to}
           end={t.to === '/'}
+          aria-label={t.label}
           className={({ isActive }) =>
-            `flex flex-col items-center bg-transparent p-1 ${
+            `flex flex-col items-center justify-center bg-transparent ${
               isActive ? 'text-bx-yellow' : 'text-white/40'
             }`
           }
-          style={{ textDecoration: 'none', gap: 4 }}
+          style={{
+            textDecoration: 'none',
+            gap: 4,
+            // 44pt min tap height per HIG. Visible content stays compact
+            // (icon + label) but the hit area extends.
+            minHeight: 48,
+            padding: '4px 0',
+          }}
         >
           <div style={{ fontSize: 18, lineHeight: 1 }}>{t.icon}</div>
           <div

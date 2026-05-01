@@ -10,9 +10,11 @@ import type { Kid } from '../../lib/types';
 
 type Zone = { label: string; min: number; max: number };
 
+// Kid-friendly zone labels per first-grader copy rule. "Approach Zone" /
+// "Mid Tower" are dev jargon; we surface the floor range plain instead.
 const ZONES: Zone[] = [
-  { label: 'Approach Zone (91-99)', min: 91, max: 99 },
-  { label: 'Mid Tower (50-90)', min: 50, max: 90 },
+  { label: 'Letzte 10 Etagen (91–99)', min: 91, max: 99 },
+  { label: 'Mitte (50–90)', min: 50, max: 90 },
 ];
 
 type Row =
@@ -47,9 +49,21 @@ export function TowerView() {
     rows.push({ kind: 'kid', key: k.id, kid: k });
   }
 
+  // Detect "alone in the tower" — only this kid (or no peakKid + no others).
+  // Different message from "loading" because the data ISN'T loading, it's
+  // just empty.
+  const onlyMe = kids.length === 1 && kids[0]?.id === me?.id;
+  const stillLoading = kids.length === 0;
+
   return (
     <div className="bx min-h-screen w-full">
-      <div className="px-5 pt-5">
+      {/* Header — top padding respects iPhone notch via safe-area-inset-top. */}
+      <div
+        className="px-5"
+        style={{
+          paddingTop: 'max(20px, calc(env(safe-area-inset-top) + 12px))',
+        }}
+      >
         <div className="bx-eyebrow">Saison 04 · Etage 1–100</div>
         <div
           className="bx-display"
@@ -85,16 +99,31 @@ export function TowerView() {
             />
           ),
         )}
-        {rows.length === 0 && (
+        {stillLoading && (
           <div
             className="text-center bx-mono"
             style={{
               padding: 30,
               color: 'var(--bx-mute)',
-              fontSize: 12,
+              letterSpacing: '0.18em',
+              textTransform: 'uppercase',
+              fontSize: 11,
             }}
           >
             Lade Turm…
+          </div>
+        )}
+        {onlyMe && (
+          <div
+            className="bx-card text-center"
+            style={{
+              padding: 24,
+              color: 'var(--bx-mute)',
+              fontSize: 13,
+              lineHeight: 1.45,
+            }}
+          >
+            Allein im Turm. Scan einen Freund rein.
           </div>
         )}
       </div>

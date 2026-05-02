@@ -2,6 +2,7 @@
 // Summary card (Bey + score + Bey), ELO/Etage delta preview, 24h dispute
 // notice. Visual layout from .design-handoff/project/match.jsx (step === 3).
 
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDraftBattle } from '../../stores/draft-battle';
 import { useLogBattle } from '../../hooks/useBattles';
@@ -11,6 +12,11 @@ import { eloToFloor } from '../../lib/floor';
 import { computeElo } from '../../lib/elo';
 import { Bey } from '../bey/Bey';
 import { beyVisualFromDb } from '../bey/beyVisual';
+import { BattleCelebration } from './BattleCelebration';
+import {
+  celebrationTierFor,
+  type CelebrationTier,
+} from './celebrationTier';
 
 export function LogBattleConfirm() {
   const draft = useDraftBattle();
@@ -20,6 +26,7 @@ export function LogBattleConfirm() {
   const { data: me } = useCurrentKid();
   const { data: opp } = useKidById(draft.opponent_kid_id ?? null);
   const { data: beys = [] } = useAllBeys();
+  const [celebration, setCelebration] = useState<CelebrationTier | null>(null);
 
   if (
     !me ||
@@ -71,8 +78,22 @@ export function LogBattleConfirm() {
       } catch {
         /* not all browsers honor this; non-essential */
       }
-      reset();
-      nav('/');
+      // If the kid won, fire the celebration overlay (curated Beyblade X
+      // GIF, kid-safe, rating=g). The overlay auto-dismisses after ~2.6s
+      // and then we navigate home. On a loss we skip straight to nav —
+      // no faux-celebration on losing.
+      const tier = celebrationTierFor({
+        iWon: draft.i_won,
+        myFloor: me?.floor ?? 1,
+        myFloorNew,
+      });
+      if (tier) {
+        setCelebration(tier);
+        // dismiss handler navigates home + resets draft
+      } else {
+        reset();
+        nav('/');
+      }
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error('Battle log failed:', e);
@@ -81,8 +102,17 @@ export function LogBattleConfirm() {
     }
   }
 
+  function dismissCelebration() {
+    setCelebration(null);
+    reset();
+    nav('/');
+  }
+
   return (
     <div style={{ paddingBottom: 110 }}>
+      {celebration && (
+        <BattleCelebration tier={celebration} onDismiss={dismissCelebration} />
+      )}
       {/* header */}
       <div style={{ padding: '12px 18px 0' }}>
         <div className="bx-eyebrow flex items-center gap-1.5">

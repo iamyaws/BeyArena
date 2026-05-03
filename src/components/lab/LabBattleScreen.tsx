@@ -5,6 +5,7 @@
 // Spec section 5.4.
 
 import { useEffect, useMemo, useState } from 'react';
+import { playLab } from '../../lib/labSound';
 import { motion, useReducedMotion } from 'motion/react';
 import { useAllBeys } from '../../hooks/useBeys';
 import { useCrewKidsWithPrimary } from '../../hooks/useCrewKidsWithPrimary';
@@ -28,7 +29,7 @@ export function LabBattleScreen({ myBeyId, opponent, onComplete, onCancel }: Pro
   const { data: beys = [] } = useAllBeys();
   const { data: crew = [] } = useCrewKidsWithPrimary();
   const reducedMotion = useReducedMotion();
-  const { recordWin, recordLoss } = useLabSession();
+  const { recordWin, recordLoss, soundEnabled } = useLabSession();
 
   // Resolve opponent bey at mount time, using a fresh seed per fight.
   const seed = useMemo(() => Date.now() ^ Math.floor(Math.random() * 0xffff), []);
@@ -65,24 +66,38 @@ export function LabBattleScreen({ myBeyId, opponent, onComplete, onCancel }: Pro
       }, 200);
       return () => clearTimeout(t);
     }
+    if (soundEnabled) playLab('launch');
     const seq = [
       { p: 'launch' as const, ms: 300 },
       { p: 'closing' as const, ms: 1500 },
-      { p: 'clash' as const, ms: 1800 }, // 3 beats × 600ms
+      { p: 'clash' as const, ms: 1800 },
       { p: 'result' as const, ms: 1200 },
     ];
     const timeouts: ReturnType<typeof setTimeout>[] = [];
     let acc = 0;
     for (const s of seq) {
       acc += s.ms;
-      timeouts.push(setTimeout(() => setPhase(s.p === 'launch' ? 'closing' : s.p === 'closing' ? 'clash' : s.p === 'clash' ? 'result' : 'done'), acc));
+      timeouts.push(setTimeout(() => {
+        if (s.p === 'closing') {
+          setPhase('clash');
+          // 3 clash beats spaced 600ms apart
+          if (soundEnabled) {
+            playLab('clash');
+            setTimeout(() => playLab('clash'), 600);
+            setTimeout(() => playLab('clash'), 1200);
+          }
+        } else if (s.p === 'clash') {
+          setPhase('result');
+          if (soundEnabled && outcome.winner === 'me') playLab('fanfare');
+        }
+      }, acc));
     }
     timeouts.push(setTimeout(() => {
       outcome.winner === 'me' ? recordWin() : recordLoss();
       onComplete(outcome, oppBey);
     }, acc + 200));
     return () => timeouts.forEach((t) => clearTimeout(t));
-  }, [outcome, oppBey, reducedMotion, recordWin, recordLoss, onComplete]);
+  }, [outcome, oppBey, reducedMotion, recordWin, recordLoss, onComplete, soundEnabled]);
 
   if (!myBey || !oppBey || !outcome) {
     return (

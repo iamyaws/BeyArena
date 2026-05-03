@@ -10,6 +10,7 @@ import { NavLink } from 'react-router-dom';
 const TABS = [
   { to: '/', label: 'Heim', icon: '⌂' },
   { to: '/tower', label: 'Turm', icon: '▲' },
+  { to: '/lab', label: 'Lab', icon: '⚗' },
   { to: '/profil', label: 'Karte', icon: '◆' },
   { to: '/feed', label: 'Feed', icon: '≡' },
 ];
@@ -19,7 +20,7 @@ export function BottomNav() {
     <nav
       className="bx-bottomnav fixed bottom-0 left-0 right-0 grid"
       style={{
-        gridTemplateColumns: 'repeat(4, 1fr)',
+        gridTemplateColumns: 'repeat(5, 1fr)',
         paddingTop: 8,
         paddingBottom: 'max(8px, env(safe-area-inset-bottom))',
       }}

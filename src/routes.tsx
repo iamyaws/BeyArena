@@ -7,6 +7,7 @@ import { ProfilePage } from './pages/ProfilePage';
 import { PublicProfilePage } from './pages/PublicProfilePage';
 import { FeedPage } from './pages/FeedPage';
 import { HomePage } from './pages/HomePage';
+import { LabTab } from './components/lab/LabTab';
 import { QrLoginPage } from './pages/QrLoginPage';
 import { KidRoute } from './components/auth/KidRoute';
 import { AdminRoute } from './components/auth/AdminRoute';
@@ -69,6 +70,14 @@ export function AppRoutes() {
         element={
           <KidRoute>
             <FeedPage />
+          </KidRoute>
+        }
+      />
+      <Route
+        path="/lab"
+        element={
+          <KidRoute>
+            <LabTab />
           </KidRoute>
         }
       />

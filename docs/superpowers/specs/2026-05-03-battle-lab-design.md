@@ -104,9 +104,9 @@ type Outcome = {
   winner: 'me' | 'opp';
   margin: 'knapp' | 'klar' | 'zerstoert';
   reasonKey:
-    | 'atk-cracks-def' | 'def-walls-atk' | 'sta-outlasts-sta'
-    | 'sta-beats-atk'  | 'atk-beats-sta' | 'def-beats-sta'
-    | 'closer-stats'   | 'upset';
+    | 'atk-cracks-def' | 'def-walls-atk' | 'sta-outlasts-sta'  // stat-driven
+    | 'atk-beats-sta'  | 'sta-beats-def' | 'def-beats-atk'     // type-chart-driven
+    | 'closer-stats'   | 'upset';                               // misc
   myOdds: number;          // 0..1, post-clamp; for the recap odds bar
   seed: number;            // for reproducible animation
 };

@@ -7,6 +7,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { playLab } from '../../lib/labSound';
 import { vibrate } from '../../lib/labHaptics';
+import { markTrainerBeaten } from '../../lib/labTrainerBadges';
 import { motion, useReducedMotion } from 'motion/react';
 import { useAllBeys } from '../../hooks/useBeys';
 import { useCrewKidsWithPrimary } from '../../hooks/useCrewKidsWithPrimary';
@@ -62,7 +63,12 @@ export function LabBattleScreen({ myBeyId, opponent, onComplete, onCancel }: Pro
     if (reducedMotion) {
       // Compress to a 200ms crossfade.
       const t = setTimeout(() => {
-        outcome.winner === 'me' ? recordWin() : recordLoss();
+        if (outcome.winner === 'me') {
+          recordWin();
+          if (opponent.kind === 'trainer') markTrainerBeaten(opponent.trainerId);
+        } else {
+          recordLoss();
+        }
         onComplete(outcome, oppBey);
       }, 200);
       return () => clearTimeout(t);
@@ -100,7 +106,12 @@ export function LabBattleScreen({ myBeyId, opponent, onComplete, onCancel }: Pro
       }, acc));
     }
     timeouts.push(setTimeout(() => {
-      outcome.winner === 'me' ? recordWin() : recordLoss();
+      if (outcome.winner === 'me') {
+        recordWin();
+        if (opponent.kind === 'trainer') markTrainerBeaten(opponent.trainerId);
+      } else {
+        recordLoss();
+      }
       onComplete(outcome, oppBey);
     }, acc + 200));
     return () => timeouts.forEach((t) => clearTimeout(t));

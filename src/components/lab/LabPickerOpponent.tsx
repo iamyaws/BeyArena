@@ -4,6 +4,7 @@
 
 import { useState } from 'react';
 import { LAB_TRAINERS } from '../../data/labTrainers';
+import { getTrainersBeatenToday } from '../../lib/labTrainerBadges';
 import { useCrewKidsWithPrimary } from '../../hooks/useCrewKidsWithPrimary';
 import { LabPickerBey } from './LabPickerBey';
 import type { OpponentKind } from '../../lib/labEngine';
@@ -22,6 +23,8 @@ export function LabPickerOpponent({ open, onPick, onClose }: Props) {
   const [tab, setTab] = useState<Tab>('wild');
   const [chooseBeyOpen, setChooseBeyOpen] = useState(false);
   const { data: crew = [] } = useCrewKidsWithPrimary();
+
+  const beaten = open ? getTrainersBeatenToday() : new Set<string>();
 
   if (!open) return null;
 
@@ -77,28 +80,51 @@ export function LabPickerOpponent({ open, onPick, onClose }: Props) {
           {tab === 'wild' ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 4 }}>
-                {LAB_TRAINERS.map((t) => (
-                  <button
-                    key={t.id}
-                    onClick={() => onPick({ kind: 'trainer', trainerId: t.id }, t.name)}
-                    className="bx-card"
-                    style={{
-                      minWidth: 140,
-                      padding: 12,
-                      textAlign: 'center',
-                      cursor: 'pointer',
-                      flexShrink: 0,
-                    }}
-                  >
-                    <div style={{ fontSize: 28 }}>{t.emoji}</div>
-                    <div className="bx-display" style={{ fontSize: 13, marginTop: 4 }}>
-                      {t.name}
-                    </div>
-                    <div className="bx-mono" style={{ fontSize: 9, marginTop: 6, color: 'var(--bx-mute)' }}>
-                      „{t.flavor}"
-                    </div>
-                  </button>
-                ))}
+                {LAB_TRAINERS.map((t) => {
+                  const isBeaten = beaten.has(t.id);
+                  return (
+                    <button
+                      key={t.id}
+                      onClick={() => onPick({ kind: 'trainer', trainerId: t.id }, t.name)}
+                      className="bx-card"
+                      style={{
+                        minWidth: 140,
+                        padding: 12,
+                        textAlign: 'center',
+                        cursor: 'pointer',
+                        flexShrink: 0,
+                        position: 'relative',
+                      }}
+                    >
+                      {isBeaten && (
+                        <div
+                          className="bx-mono"
+                          style={{
+                            position: 'absolute',
+                            top: 6,
+                            right: 6,
+                            fontSize: 9,
+                            background: 'rgba(34,197,94,0.15)',
+                            border: '1px solid rgba(34,197,94,0.45)',
+                            color: '#22c55e',
+                            padding: '2px 6px',
+                            borderRadius: 999,
+                            letterSpacing: '0.08em',
+                          }}
+                        >
+                          ✓ HEUTE
+                        </div>
+                      )}
+                      <div style={{ fontSize: 28 }}>{t.emoji}</div>
+                      <div className="bx-display" style={{ fontSize: 13, marginTop: 4 }}>
+                        {t.name}
+                      </div>
+                      <div className="bx-mono" style={{ fontSize: 9, marginTop: 6, color: 'var(--bx-mute)' }}>
+                        „{t.flavor}"
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
 
               <button

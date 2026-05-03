@@ -89,7 +89,7 @@ export function LabPickerBey({ open, onPick, onClose }: Props) {
           </div>
         )}
 
-        <div className="grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
+        <div className="grid" style={{ gridTemplateColumns: 'repeat(2, 1fr)', gap: 10 }}>
           {beys.map((b) => (
             <BeyPickCard key={b.id} bey={b} onPick={() => onPick(b.id)} />
           ))}
@@ -99,70 +99,126 @@ export function LabPickerBey({ open, onPick, onClose }: Props) {
   );
 }
 
+// Type emblem colors — each type has a distinctive accent so the kid can scan
+// a grid and see "all the attack-types are red" at a glance.
+const TYPE_TINT: Record<NonNullable<DbBey['type']>, string> = {
+  attack: '#DC2626',
+  defense: '#2563EB',
+  stamina: '#7C3AED',
+  balance: '#F97316',
+};
+
 function BeyPickCard({ bey, onPick }: { bey: DbBey; onPick: () => void }) {
   const visual = beyVisualFromDb(bey);
   const emblem = bey.type ? TYPE_EMOJI[bey.type] : '';
+  const emblemTint = bey.type ? TYPE_TINT[bey.type] : 'var(--bx-mute)';
   return (
     <button
       onClick={onPick}
       className="bx-card"
       style={{
-        padding: 10,
+        padding: 12,
         textAlign: 'left',
         cursor: 'pointer',
         minHeight: 44,
         background: 'rgba(255,255,255,0.03)',
+        position: 'relative',
       }}
     >
-      <div className="flex justify-center" style={{ marginBottom: 6 }}>
-        <Bey bey={visual} size={48} spin />
+      {/* Type emblem in the top-right corner — out of the way but always visible */}
+      <div
+        className="bx-mono"
+        style={{
+          position: 'absolute',
+          top: 8,
+          right: 8,
+          fontSize: 16,
+          color: emblemTint,
+          filter: `drop-shadow(0 0 4px ${emblemTint}66)`,
+        }}
+        aria-label={bey.type ?? ''}
+      >
+        {emblem}
+      </div>
+
+      <div className="flex justify-center" style={{ marginBottom: 8 }}>
+        <Bey bey={visual} size={56} spin />
       </div>
       <div
-        className="bx-display truncate"
-        style={{ fontSize: 11, lineHeight: 1.2, marginBottom: 4 }}
+        className="bx-display"
+        style={{
+          fontSize: 12,
+          lineHeight: 1.15,
+          marginBottom: 8,
+          minHeight: 28, // reserve room for two lines so cards don't shift
+          color: 'rgba(255,255,255,0.92)',
+        }}
       >
         {bey.name_de ?? bey.name_en}
       </div>
       <StatBars bey={bey} />
-      <div className="bx-mono" style={{ fontSize: 10, marginTop: 4, color: 'var(--bx-mute)' }}>
-        {emblem}
-      </div>
     </button>
   );
 }
 
 function StatBars({ bey }: { bey: DbBey }) {
-  const stats: Array<['ATK' | 'DEF' | 'STA', number]> = [
-    ['ATK', bey.stat_attack ?? 0],
-    ['DEF', bey.stat_defense ?? 0],
-    ['STA', bey.stat_stamina ?? 0],
+  const stats: Array<['ATK' | 'DEF' | 'STA', number | null]> = [
+    ['ATK', bey.stat_attack],
+    ['DEF', bey.stat_defense],
+    ['STA', bey.stat_stamina],
   ];
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      {stats.map(([label, val]) => (
-        <div key={label} className="flex items-center" style={{ gap: 4 }}>
-          <div className="bx-mono" style={{ fontSize: 8, width: 22, color: 'var(--bx-mute)' }}>
-            {label}
-          </div>
-          <div
-            style={{
-              flex: 1,
-              height: 4,
-              background: 'rgba(255,255,255,0.08)',
-              borderRadius: 2,
-              overflow: 'hidden',
-            }}
-          >
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+      {stats.map(([label, val]) => {
+        const v = val ?? 0;
+        const pct = Math.min(100, v);
+        return (
+          <div key={label} className="flex items-center" style={{ gap: 6 }}>
+            <div
+              className="bx-mono"
+              style={{
+                fontSize: 10,
+                width: 26,
+                color: 'rgba(255,255,255,0.75)',
+                letterSpacing: '0.04em',
+              }}
+            >
+              {label}
+            </div>
             <div
               style={{
-                width: `${Math.min(100, val)}%`,
-                height: '100%',
-                background: 'var(--bx-yellow)',
+                flex: 1,
+                height: 7,
+                background: 'rgba(255,255,255,0.10)',
+                borderRadius: 4,
+                overflow: 'hidden',
+                border: '1px solid rgba(255,255,255,0.06)',
               }}
-            />
+            >
+              <div
+                style={{
+                  width: `${pct}%`,
+                  height: '100%',
+                  background:
+                    'linear-gradient(90deg, var(--bx-yellow), #FACC15)',
+                  boxShadow: '0 0 6px rgba(253,224,71,0.35)',
+                }}
+              />
+            </div>
+            <div
+              className="bx-mono"
+              style={{
+                fontSize: 10,
+                width: 22,
+                color: val == null ? 'var(--bx-mute)' : 'rgba(255,255,255,0.85)',
+                textAlign: 'right',
+              }}
+            >
+              {val == null ? '—' : v}
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

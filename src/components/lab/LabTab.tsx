@@ -19,6 +19,7 @@ import { LabRecapCard } from './LabRecapCard';
 import { LabStreakChip } from './LabStreakChip';
 import { LabPrimaryNudgeBanner } from './LabPrimaryNudgeBanner';
 import { LabFTUE, isFtueDone } from './LabFTUE';
+import { LabSettingsSheet } from './LabSettingsSheet';
 import type { OpponentKind } from '../../lib/labEngine';
 import type { Bey as DbBey } from '../../lib/types';
 
@@ -30,6 +31,7 @@ export function LabTab() {
   const [pickOppOpen, setPickOppOpen] = useState(false);
   const [opponentLabel, setOpponentLabel] = useState<string | null>(null);
   const [showFtue, setShowFtue] = useState(() => !isFtueDone());
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   // Reset picks on tab leave (spec section 9 + 10).
   useEffect(() => {
@@ -61,7 +63,17 @@ export function LabTab() {
             Teste deine Beys
           </div>
         </div>
-        <LabStreakChip />
+        <div className="flex items-center" style={{ gap: 8 }}>
+          <LabStreakChip />
+          <button
+            onClick={() => setSettingsOpen(true)}
+            aria-label="Einstellungen"
+            className="bx-btn bx-btn-ghost"
+            style={{ padding: '6px 10px', fontSize: 14, lineHeight: 1 }}
+          >
+            ⚙
+          </button>
+        </div>
       </div>
 
       <LabPrimaryNudgeBanner />
@@ -149,6 +161,8 @@ export function LabTab() {
           }}
         />
       )}
+
+      <LabSettingsSheet open={settingsOpen} onClose={() => setSettingsOpen(false)} />
     </div>
   );
 }

@@ -15,6 +15,7 @@ import { Bey } from '../bey/Bey';
 import { beyVisualFromDb } from '../bey/beyVisual';
 import { LabPickerBey } from './LabPickerBey';
 import { LabPickerOpponent } from './LabPickerOpponent';
+import { LabRecapCard } from './LabRecapCard';
 import { LabStreakChip } from './LabStreakChip';
 import type { OpponentKind } from '../../lib/labEngine';
 import type { Bey as DbBey } from '../../lib/types';
@@ -40,7 +41,7 @@ export function LabTab() {
   const [recap, setRecap] = useState<{ outcome: Outcome; oppBey: DbBey } | null>(null);
   // battleKey forces LabBattleScreen to remount on Nochmal so seed re-rolls.
   // _setBattleKey renamed to setBattleKey in Task 16 when Nochmal flow lands.
-  const [battleKey, _setBattleKey] = useState(0);
+  const [battleKey, setBattleKey] = useState(0);
 
   function handleStart() {
     if (!canStart || !myBeyId || !opponent) return;
@@ -120,6 +121,26 @@ export function LabTab() {
           opponent={activeBattle.opponent}
           onComplete={(o, oppBey) => setRecap({ outcome: o, oppBey })}
           onCancel={() => setActiveBattle(null)}
+        />
+      )}
+
+      {recap && activeBattle && myBey && (
+        <LabRecapCard
+          outcome={recap.outcome}
+          myBey={myBey}
+          oppBey={recap.oppBey}
+          onAgain={() => {
+            setRecap(null);
+            // Force LabBattleScreen to remount (fresh seed) by bumping the key.
+            setBattleKey((k) => k + 1);
+          }}
+          onOther={() => {
+            setRecap(null);
+            setActiveBattle(null);
+            // Clear opponent only (keep MEIN BEY) per spec section 5.5.
+            useLabSession.getState().clearOpponent();
+            setOpponentLabel(null);
+          }}
         />
       )}
     </div>

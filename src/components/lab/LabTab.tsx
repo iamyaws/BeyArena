@@ -5,6 +5,8 @@
 // Spec section 5.1.
 
 import { useEffect, useState } from 'react';
+import { LabBattleScreen } from './LabBattleScreen';
+import type { Outcome } from '../../lib/labEngine';
 import { useAllBeys } from '../../hooks/useBeys';
 import { useLabSession } from '../../stores/lab-session';
 import { useCrewKidsWithPrimary } from '../../hooks/useCrewKidsWithPrimary';
@@ -34,11 +36,15 @@ export function LabTab() {
   const oppBey = resolveOpponentBey(opponent, beys, crew);
   const canStart = !!myBey && !!oppBey;
 
+  const [activeBattle, setActiveBattle] = useState<{ myBeyId: string; opponent: OpponentKind } | null>(null);
+  const [recap, setRecap] = useState<{ outcome: Outcome; oppBey: DbBey } | null>(null);
+  // battleKey forces LabBattleScreen to remount on Nochmal so seed re-rolls.
+  // _setBattleKey renamed to setBattleKey in Task 16 when Nochmal flow lands.
+  const [battleKey, _setBattleKey] = useState(0);
+
   function handleStart() {
-    if (!canStart) return;
-    // LabBattleScreen will be triggered via a Zustand "active battle" flag in Task 15.
-    // For this task we just navigate visually; the actual choreography lands next.
-    document.dispatchEvent(new CustomEvent('lab:start-battle'));
+    if (!canStart || !myBeyId || !opponent) return;
+    setActiveBattle({ myBeyId, opponent });
   }
 
   return (
@@ -106,6 +112,16 @@ export function LabTab() {
         }}
         onClose={() => setPickOppOpen(false)}
       />
+
+      {activeBattle && !recap && (
+        <LabBattleScreen
+          key={battleKey}
+          myBeyId={activeBattle.myBeyId}
+          opponent={activeBattle.opponent}
+          onComplete={(o, oppBey) => setRecap({ outcome: o, oppBey })}
+          onCancel={() => setActiveBattle(null)}
+        />
+      )}
     </div>
   );
 }

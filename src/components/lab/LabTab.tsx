@@ -20,6 +20,7 @@ import { LabStreakChip } from './LabStreakChip';
 import { LabPrimaryNudgeBanner } from './LabPrimaryNudgeBanner';
 import { LabFTUE, isFtueDone } from './LabFTUE';
 import { LabSettingsSheet } from './LabSettingsSheet';
+import { vibrate } from '../../lib/labHaptics';
 import type { OpponentKind } from '../../lib/labEngine';
 import type { Bey as DbBey } from '../../lib/types';
 
@@ -50,6 +51,7 @@ export function LabTab() {
 
   function handleStart() {
     if (!canStart || !myBeyId || !opponent) return;
+    vibrate(15);
     setActiveBattle({ myBeyId, opponent });
   }
 

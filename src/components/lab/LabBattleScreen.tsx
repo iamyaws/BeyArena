@@ -6,6 +6,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { playLab } from '../../lib/labSound';
+import { vibrate } from '../../lib/labHaptics';
 import { motion, useReducedMotion } from 'motion/react';
 import { useAllBeys } from '../../hooks/useBeys';
 import { useCrewKidsWithPrimary } from '../../hooks/useCrewKidsWithPrimary';
@@ -88,7 +89,13 @@ export function LabBattleScreen({ myBeyId, opponent, onComplete, onCancel }: Pro
           }
         } else if (s.p === 'clash') {
           setPhase('result');
+          vibrate(8);
+          setTimeout(() => vibrate(8), 600);
+          setTimeout(() => vibrate(8), 1200);
           if (soundEnabled && outcome.winner === 'me') playLab('fanfare');
+          if (outcome.winner === 'me') {
+            setTimeout(() => vibrate(25), 1400);
+          }
         }
       }, acc));
     }

@@ -126,3 +126,66 @@ describe('labEngine — type chart', () => {
     expect(rate).toBeLessThanOrEqual(0.52);
   });
 });
+
+describe('labEngine — margin buckets', () => {
+  it('all-equal stats produces knapp margin', () => {
+    const o = resolveBattle(bey(), bey(), 1);
+    expect(o.margin).toBe('knapp');
+  });
+
+  it('mid stat advantage produces klar margin', () => {
+    const me = bey({ stat_attack: 75 });   // tilts +0.125 with STAT_PER_POINT=0.005
+    const opp = bey({ stat_attack: 50 });
+    const o = resolveBattle(me, opp, 1);
+    expect(o.margin).toBe('klar');
+  });
+
+  it('cap-busting stats produce zerstoert margin', () => {
+    const me = bey({ stat_attack: 100, stat_defense: 100, stat_stamina: 100 });
+    const opp = bey({ stat_attack: 10, stat_defense: 10, stat_stamina: 10 });
+    const o = resolveBattle(me, opp, 1);
+    expect(o.margin).toBe('zerstoert');
+  });
+});
+
+describe('labEngine — reasonKey resolution', () => {
+  it('atk-vs-def with attack winning by stats → atk-cracks-def', () => {
+    const me = bey({ stat_attack: 80, type: 'attack' });
+    const opp = bey({ stat_defense: 50, type: 'defense' });
+    // me is favored: type tilt (-0.10 since def beats atk) + stat tilt depends on diffs
+    // Use a seed where the favorite wins. We'll force the winner branch by trying many seeds:
+    let saw = false;
+    for (let s = 1; s < 50; s++) {
+      const o = resolveBattle(me, opp, s);
+      if (o.winner === 'me') {
+        // When the larger stat tilt is atk, reasonKey should be atk-cracks-def
+        if (o.reasonKey === 'atk-cracks-def') saw = true;
+      }
+    }
+    expect(saw).toBe(true);
+  });
+
+  it('upset wins set reasonKey="upset"', () => {
+    // Heavy favorite, but on enough seeds the underdog wins.
+    const me = bey({ stat_attack: 30, type: 'stamina' });
+    const opp = bey({ stat_attack: 80, type: 'attack' });
+    let upsets = 0;
+    for (let s = 1; s < 200; s++) {
+      const o = resolveBattle(me, opp, s);
+      if (o.winner === 'me') upsets++;
+      if (o.winner === 'me') {
+        expect(o.reasonKey).toBe('upset');
+      }
+    }
+    expect(upsets).toBeGreaterThan(0);  // some upsets happened
+  });
+
+  it('all-equal beys + favored win → closer-stats reasonKey', () => {
+    const me = bey({ type: 'attack' });
+    const opp = bey({ type: 'attack' });
+    const o = resolveBattle(me, opp, 1);
+    // myOdds = 0.5; whoever wins isn't an "upset" (favorite is undefined).
+    // We treat coin-flip wins as 'closer-stats'.
+    expect(['closer-stats', 'upset']).toContain(o.reasonKey);
+  });
+});

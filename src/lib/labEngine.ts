@@ -113,13 +113,64 @@ export function resolveBattle(
   const roll = rng();
   const winner: 'me' | 'opp' = roll < myOdds ? 'me' : 'opp';
 
-  // Margin + reasonKey are placeholders until Tasks 4 + 5; just enough to
-  // satisfy the Outcome shape so tests can run.
-  return {
+  // Margin from absolute distance from coin-flip
+  const oddsGap = Math.abs(myOdds - 0.5);
+  let margin: Margin;
+  if (oddsGap < 0.10) margin = 'knapp';
+  else if (oddsGap < 0.20) margin = 'klar';
+  else margin = 'zerstoert';
+
+  // reasonKey resolution:
+  //   1. If the favorite lost (RNG produced lower-odds outcome) → 'upset'
+  //   2. Otherwise: largest tilt component picks the reason
+  //   3. Stat tilts outrank type tilt at exact tie (already true via comparison order)
+  const favoredSide: 'me' | 'opp' | null =
+    myOdds > 0.5 ? 'me' : myOdds < 0.5 ? 'opp' : null;
+  const isUpset = favoredSide !== null && favoredSide !== winner;
+
+  const reasonKey = resolveReasonKey({
     winner,
-    margin: 'knapp',
-    reasonKey: 'closer-stats',
-    myOdds,
-    seed,
-  };
+    isUpset,
+    atkTilt, defTilt, staTilt, tTilt,
+    myType: myBey.type, oppType: oppBey.type,
+  });
+
+  return { winner, margin, reasonKey, myOdds, seed };
+}
+
+function resolveReasonKey(args: {
+  winner: 'me' | 'opp';
+  isUpset: boolean;
+  atkTilt: number;
+  defTilt: number;
+  staTilt: number;
+  tTilt: number;
+  myType: Bey['type'];
+  oppType: Bey['type'];
+}): ReasonKey {
+  if (args.isUpset) return 'upset';
+
+  const absAtk = Math.abs(args.atkTilt);
+  const absDef = Math.abs(args.defTilt);
+  const absSta = Math.abs(args.staTilt);
+  const absT   = Math.abs(args.tTilt);
+  const max = Math.max(absAtk, absDef, absSta, absT);
+
+  if (max === 0) return 'closer-stats';
+
+  // Stat tilts outrank type tilt at exact tie. Order: atk → def → sta → type.
+  if (absAtk === max) return 'atk-cracks-def';
+  if (absDef === max) return 'def-walls-atk';
+  if (absSta === max) return 'sta-outlasts-sta';
+
+  // Type tilt is the strict winner. Map the WINNER's type vs. loser's type
+  // to one of the three valid type-chart keys.
+  const winType = args.winner === 'me' ? args.myType : args.oppType;
+  const loseType = args.winner === 'me' ? args.oppType : args.myType;
+  if (winType === 'attack'  && loseType === 'stamina') return 'atk-beats-sta';
+  if (winType === 'stamina' && loseType === 'defense') return 'sta-beats-def';
+  if (winType === 'defense' && loseType === 'attack')  return 'def-beats-atk';
+
+  // Defensive fallback (shouldn't hit, but type narrowing demands it)
+  return 'closer-stats';
 }

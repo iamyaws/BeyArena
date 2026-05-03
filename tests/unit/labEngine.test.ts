@@ -84,3 +84,45 @@ describe('labEngine — stat tilts', () => {
     }
   });
 });
+
+describe('labEngine — type chart', () => {
+  it('attack vs stamina with equal stats → ~60% win rate (favored)', () => {
+    const me = bey({ id: 'me', type: 'attack' });
+    const opp = bey({ id: 'opp', type: 'stamina' });
+    const rate = winRate(me, opp);
+    expect(rate).toBeGreaterThanOrEqual(0.55);
+    expect(rate).toBeLessThanOrEqual(0.65);
+  });
+
+  it('stamina vs attack with equal stats → ~40% win rate (countered)', () => {
+    const me = bey({ id: 'me', type: 'stamina' });
+    const opp = bey({ id: 'opp', type: 'attack' });
+    const rate = winRate(me, opp);
+    expect(rate).toBeGreaterThanOrEqual(0.35);
+    expect(rate).toBeLessThanOrEqual(0.45);
+  });
+
+  it('mirror match (attack vs attack) → ~50% (no type tilt)', () => {
+    const me = bey({ id: 'me', type: 'attack' });
+    const opp = bey({ id: 'opp', type: 'attack' });
+    const rate = winRate(me, opp);
+    expect(rate).toBeGreaterThanOrEqual(0.48);
+    expect(rate).toBeLessThanOrEqual(0.52);
+  });
+
+  it('balance type → no tilt either way (neutral)', () => {
+    const me = bey({ id: 'me', type: 'balance' });
+    const opp = bey({ id: 'opp', type: 'attack' });
+    const rate = winRate(me, opp);
+    expect(rate).toBeGreaterThanOrEqual(0.48);
+    expect(rate).toBeLessThanOrEqual(0.52);
+  });
+
+  it('null type (data gap) → no tilt either way (neutral)', () => {
+    const me = bey({ id: 'me', type: null });
+    const opp = bey({ id: 'opp', type: 'attack' });
+    const rate = winRate(me, opp);
+    expect(rate).toBeGreaterThanOrEqual(0.48);
+    expect(rate).toBeLessThanOrEqual(0.52);
+  });
+});

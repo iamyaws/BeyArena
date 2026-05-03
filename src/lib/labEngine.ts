@@ -78,6 +78,24 @@ function statTilt(my: number | null, opp: number | null): number {
   return clamp(-STAT_CAP, STAT_CAP, (m - o) * STAT_PER_POINT);
 }
 
+const TYPE_TILT = 0.10;
+
+// Rock-paper-scissors: Attack > Stamina > Defense > Attack.
+// Balance + null → no tilt (neutral).
+const TYPE_BEATS: Record<'attack' | 'defense' | 'stamina', 'attack' | 'defense' | 'stamina'> = {
+  attack: 'stamina',
+  stamina: 'defense',
+  defense: 'attack',
+};
+
+function typeTilt(myType: Bey['type'], oppType: Bey['type']): number {
+  if (!myType || !oppType) return 0;
+  if (myType === 'balance' || oppType === 'balance') return 0;
+  if (TYPE_BEATS[myType] === oppType) return +TYPE_TILT;
+  if (TYPE_BEATS[oppType] === myType) return -TYPE_TILT;
+  return 0; // mirror match
+}
+
 export function resolveBattle(
   myBey: Bey,
   oppBey: Bey,
@@ -86,8 +104,9 @@ export function resolveBattle(
   const atkTilt = statTilt(myBey.stat_attack, oppBey.stat_attack);
   const defTilt = statTilt(myBey.stat_defense, oppBey.stat_defense);
   const staTilt = statTilt(myBey.stat_stamina, oppBey.stat_stamina);
+  const tTilt   = typeTilt(myBey.type, oppBey.type);
 
-  const rawOdds = 0.5 + atkTilt + defTilt + staTilt;
+  const rawOdds = 0.5 + atkTilt + defTilt + staTilt + tTilt;
   const myOdds = clamp(ODDS_FLOOR, ODDS_CEIL, rawOdds);
 
   const rng = mulberry32(seed);

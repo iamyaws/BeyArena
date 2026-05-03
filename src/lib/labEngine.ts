@@ -6,9 +6,9 @@
 // Math (full reasoning in docs/superpowers/specs/2026-05-03-battle-lab-design.md
 // section 4):
 //   odds = 0.5
-//        + clamp(±0.15, (myAtk-oppAtk) * 0.004)
-//        + clamp(±0.15, (myDef-oppDef) * 0.004)
-//        + clamp(±0.15, (mySta-oppSta) * 0.004)
+//        + clamp(±0.15, (myAtk-oppAtk) * 0.005)
+//        + clamp(±0.15, (myDef-oppDef) * 0.005)
+//        + clamp(±0.15, (mySta-oppSta) * 0.005)
 //        + typeTilt(myType, oppType)            ∈ {-0.10, 0, +0.10}
 //   odds = clamp(0.25, 0.75, odds)
 //   winner = (mulberry32(seed) < odds) ? 'me' : 'opp'
@@ -63,12 +63,44 @@ export function mulberry32(seed: number): () => number {
   };
 }
 
+const STAT_PER_POINT = 0.005;  // 30-point single-stat advantage caps at ±0.15
+const STAT_CAP = 0.15;
+const ODDS_FLOOR = 0.25;
+const ODDS_CEIL = 0.75;
+
+function clamp(min: number, max: number, v: number): number {
+  return Math.max(min, Math.min(max, v));
+}
+
+function statTilt(my: number | null, opp: number | null): number {
+  const m = my ?? 50;
+  const o = opp ?? 50;
+  return clamp(-STAT_CAP, STAT_CAP, (m - o) * STAT_PER_POINT);
+}
+
 export function resolveBattle(
-  _myBey: Bey,
-  _oppBey: Bey,
-  _seed: number = Date.now(),
+  myBey: Bey,
+  oppBey: Bey,
+  seed: number = Date.now(),
 ): Outcome {
-  // Stub — implemented in subsequent tasks (Task 3 stat tilts, Task 4 type
-  // chart, Task 5 margin + reasonKey resolution).
-  throw new Error('resolveBattle not implemented');
+  const atkTilt = statTilt(myBey.stat_attack, oppBey.stat_attack);
+  const defTilt = statTilt(myBey.stat_defense, oppBey.stat_defense);
+  const staTilt = statTilt(myBey.stat_stamina, oppBey.stat_stamina);
+
+  const rawOdds = 0.5 + atkTilt + defTilt + staTilt;
+  const myOdds = clamp(ODDS_FLOOR, ODDS_CEIL, rawOdds);
+
+  const rng = mulberry32(seed);
+  const roll = rng();
+  const winner: 'me' | 'opp' = roll < myOdds ? 'me' : 'opp';
+
+  // Margin + reasonKey are placeholders until Tasks 4 + 5; just enough to
+  // satisfy the Outcome shape so tests can run.
+  return {
+    winner,
+    margin: 'knapp',
+    reasonKey: 'closer-stats',
+    myOdds,
+    seed,
+  };
 }

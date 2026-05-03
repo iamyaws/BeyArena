@@ -380,33 +380,10 @@ git commit -m "feat(lab): engine stat tilts with clamp + mulberry32 RNG (TDD)"
 
 - [ ] **Step 1: Add failing type-chart tests**
 
-Append to `tests/unit/labEngine.test.ts`:
+Append to `tests/unit/labEngine.test.ts` — **reuse the module-level `bey()` and `winRate()` helpers** declared in Task 3 (don't redeclare them inside the describe block):
 
 ```ts
 describe('labEngine — type chart', () => {
-  function bey(overrides: Partial<Bey> = {}): Bey {
-    // Re-declared because TS file has it scoped to outer describe; keep it simple
-    return {
-      id: overrides.id ?? 'tc-' + Math.random(),
-      name_en: 'Test', name_de: null, name_jp: null, product_code: null,
-      image_url: null, type: overrides.type ?? null, line: null,
-      blade_id: null, ratchet_id: null, bit_id: null,
-      stat_attack: overrides.stat_attack ?? 50,
-      stat_defense: overrides.stat_defense ?? 50,
-      stat_stamina: overrides.stat_stamina ?? 50,
-      stat_burst_resistance: null, source_url: null, available_in_de: true,
-      canonical: true, scraped_at: null, created_at: '2026-05-03T00:00:00Z',
-    };
-  }
-
-  function winRate(my: Bey, opp: Bey, iters = 10000): number {
-    let w = 0;
-    for (let i = 0; i < iters; i++) {
-      if (resolveBattle(my, opp, i + 1).winner === 'me') w++;
-    }
-    return w / iters;
-  }
-
   it('attack vs stamina with equal stats → ~60% win rate (favored)', () => {
     const me = bey({ id: 'me', type: 'attack' });
     const opp = bey({ id: 'opp', type: 'stamina' });
@@ -518,31 +495,17 @@ git commit -m "feat(lab): engine type chart (atk>sta>def>atk, ±10%)"
 
 - [ ] **Step 1: Add failing margin + reasonKey tests**
 
-Append to `tests/unit/labEngine.test.ts`:
+Append to `tests/unit/labEngine.test.ts` — **reuse the module-level `bey()` from Task 3** (don't redeclare it inside the describe blocks):
 
 ```ts
 describe('labEngine — margin buckets', () => {
-  function bey(overrides: Partial<Bey> = {}): Bey {
-    return {
-      id: overrides.id ?? 'm-' + Math.random(),
-      name_en: 'Test', name_de: null, name_jp: null, product_code: null,
-      image_url: null, type: overrides.type ?? null, line: null,
-      blade_id: null, ratchet_id: null, bit_id: null,
-      stat_attack: overrides.stat_attack ?? 50,
-      stat_defense: overrides.stat_defense ?? 50,
-      stat_stamina: overrides.stat_stamina ?? 50,
-      stat_burst_resistance: null, source_url: null, available_in_de: true,
-      canonical: true, scraped_at: null, created_at: '2026-05-03T00:00:00Z',
-    };
-  }
-
   it('all-equal stats produces knapp margin', () => {
     const o = resolveBattle(bey(), bey(), 1);
     expect(o.margin).toBe('knapp');
   });
 
   it('mid stat advantage produces klar margin', () => {
-    const me = bey({ stat_attack: 75 });   // tilts ~+0.10
+    const me = bey({ stat_attack: 75 });   // tilts +0.125 with STAT_PER_POINT=0.005
     const opp = bey({ stat_attack: 50 });
     const o = resolveBattle(me, opp, 1);
     expect(o.margin).toBe('klar');
@@ -557,20 +520,6 @@ describe('labEngine — margin buckets', () => {
 });
 
 describe('labEngine — reasonKey resolution', () => {
-  function bey(overrides: Partial<Bey> = {}): Bey {
-    return {
-      id: overrides.id ?? 'r-' + Math.random(),
-      name_en: 'Test', name_de: null, name_jp: null, product_code: null,
-      image_url: null, type: overrides.type ?? null, line: null,
-      blade_id: null, ratchet_id: null, bit_id: null,
-      stat_attack: overrides.stat_attack ?? 50,
-      stat_defense: overrides.stat_defense ?? 50,
-      stat_stamina: overrides.stat_stamina ?? 50,
-      stat_burst_resistance: null, source_url: null, available_in_de: true,
-      canonical: true, scraped_at: null, created_at: '2026-05-03T00:00:00Z',
-    };
-  }
-
   it('atk-vs-def with attack winning by stats → atk-cracks-def', () => {
     const me = bey({ stat_attack: 80, type: 'attack' });
     const opp = bey({ stat_defense: 50, type: 'defense' });

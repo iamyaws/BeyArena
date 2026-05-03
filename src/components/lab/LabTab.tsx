@@ -18,6 +18,7 @@ import { LabPickerOpponent } from './LabPickerOpponent';
 import { LabRecapCard } from './LabRecapCard';
 import { LabStreakChip } from './LabStreakChip';
 import { LabPrimaryNudgeBanner } from './LabPrimaryNudgeBanner';
+import { LabFTUE, isFtueDone } from './LabFTUE';
 import type { OpponentKind } from '../../lib/labEngine';
 import type { Bey as DbBey } from '../../lib/types';
 
@@ -28,6 +29,7 @@ export function LabTab() {
   const [pickMyOpen, setPickMyOpen] = useState(false);
   const [pickOppOpen, setPickOppOpen] = useState(false);
   const [opponentLabel, setOpponentLabel] = useState<string | null>(null);
+  const [showFtue, setShowFtue] = useState(() => !isFtueDone());
 
   // Reset picks on tab leave (spec section 9 + 10).
   useEffect(() => {
@@ -51,6 +53,7 @@ export function LabTab() {
 
   return (
     <div className="bx" style={{ padding: '12px 18px 110px' }}>
+      {showFtue && <LabFTUE onComplete={() => setShowFtue(false)} />}
       <div className="flex items-center justify-between">
         <div>
           <div className="bx-eyebrow">BEYBLADE LAB</div>

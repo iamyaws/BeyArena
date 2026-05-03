@@ -18,6 +18,7 @@ import { useSession } from '../stores/session';
 import { Avatar } from '../components/ui/Avatar';
 import { StatBar } from '../components/ui/StatBar';
 import { PlayerCard } from '../components/profile/PlayerCard';
+import { PrimaryBeySetter } from '../components/profile/PrimaryBeySetter';
 import { Bey } from '../components/bey/Bey';
 import { beyVisualFromDb } from '../components/bey/beyVisual';
 import type { Bey as DbBey, Battle } from '../lib/types';
@@ -333,6 +334,20 @@ export function ProfilePage() {
                   position: 'relative',
                 }}
               >
+                {/* ⭐ Primary badge — top-right corner, only on primary bey */}
+                {owned && kid.primary_bey_id === bey.id && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: 6,
+                      right: 6,
+                      fontSize: 14,
+                      lineHeight: 1,
+                    }}
+                  >
+                    ⭐
+                  </div>
+                )}
                 {owned ? (
                   <Bey bey={beyVisualFromDb(bey)} size={56} />
                 ) : (
@@ -361,6 +376,15 @@ export function ProfilePage() {
                 >
                   {bey.product_code ?? '—'}
                 </div>
+                {/* Setter button — stop propagation so card's open-sheet click doesn't fire */}
+                {owned && (
+                  <div onClick={(e) => e.stopPropagation()}>
+                    <PrimaryBeySetter
+                      bey={bey}
+                      isPrimary={kid.primary_bey_id === bey.id}
+                    />
+                  </div>
+                )}
               </button>
             ))}
           </div>

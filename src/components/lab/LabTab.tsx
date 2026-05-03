@@ -17,6 +17,7 @@ import { LabPickerBey } from './LabPickerBey';
 import { LabPickerOpponent } from './LabPickerOpponent';
 import { LabRecapCard } from './LabRecapCard';
 import { LabStreakChip } from './LabStreakChip';
+import { LabPrimaryNudgeBanner } from './LabPrimaryNudgeBanner';
 import type { OpponentKind } from '../../lib/labEngine';
 import type { Bey as DbBey } from '../../lib/types';
 
@@ -59,6 +60,8 @@ export function LabTab() {
         </div>
         <LabStreakChip />
       </div>
+
+      <LabPrimaryNudgeBanner />
 
       <div
         className="grid items-center"

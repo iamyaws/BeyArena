@@ -122,9 +122,9 @@ function resolveBattle(
 
 1. Start at `odds = 0.50` (favoring `me`).
 2. Add stat tilts:
-   - `(myAtk - oppAtk) * 0.004`, capped at ±0.15
-   - `(myDef - oppDef) * 0.004`, capped at ±0.15
-   - `(mySta - oppSta) * 0.004`, capped at ±0.15
+   - `(myAtk - oppAtk) * 0.005`, capped at ±0.15  (30-point advantage caps)
+   - `(myDef - oppDef) * 0.005`, capped at ±0.15
+   - `(mySta - oppSta) * 0.005`, capped at ±0.15
 3. Add type-chart tilt (rock-paper-scissors: Atk > Sta > Def > Atk):
    - +0.10 if my type beats opp type
    - −0.10 if opp type beats my type
@@ -164,9 +164,9 @@ If a bey's `type` field is null/unknown (e.g., custom or scraping miss), the typ
 
 | Case | Expected |
 |---|---|
-| `myAtk=80, oppAtk=50`, rest equal, 10k iters | win-rate ∈ [65%, 75%] |
+| `myAtk=80, oppAtk=50`, rest equal, 10k iters | win-rate ∈ [65%, 75%] (caps at +0.15 → 65%) |
 | All-equal beys, 10k iters | win-rate ∈ [48%, 52%] |
-| `myAtk=100, oppAtk=10`, 10k iters | win-rate ≤ 75% (clamp holds) |
+| `myAtk=100, oppAtk=10` (all 3 stats), 10k iters | win-rate ∈ [72%, 76%] (clamp holds at ~75%) |
 | Atk-type vs Sta-type, equal stats, 10k iters | win-rate ∈ [55%, 65%] |
 | Sta-type vs Atk-type, equal stats, 10k iters | win-rate ∈ [35%, 45%] |
 | Same seed twice | identical Outcome (determinism) |

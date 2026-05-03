@@ -115,9 +115,9 @@ git commit -m "feat(db): add kids.primary_bey_id for Battle Lab opponent picker"
 // Math (full reasoning in docs/superpowers/specs/2026-05-03-battle-lab-design.md
 // section 4):
 //   odds = 0.5
-//        + clamp(±0.15, (myAtk-oppAtk) * 0.004)
-//        + clamp(±0.15, (myDef-oppDef) * 0.004)
-//        + clamp(±0.15, (mySta-oppSta) * 0.004)
+//        + clamp(±0.15, (myAtk-oppAtk) * 0.005)
+//        + clamp(±0.15, (myDef-oppDef) * 0.005)
+//        + clamp(±0.15, (mySta-oppSta) * 0.005)
 //        + typeTilt(myType, oppType)            ∈ {-0.10, 0, +0.10}
 //   odds = clamp(0.25, 0.75, odds)
 //   winner = (mulberry32(seed) < odds) ? 'me' : 'opp'
@@ -267,12 +267,15 @@ describe('labEngine — stat tilts', () => {
     expect(rate).toBeLessThanOrEqual(0.75);
   });
 
-  it('cap-busting stats stay clamped to 75% max', () => {
+  it('cap-busting stats stay clamped near 75% max', () => {
+    // myOdds clamps to 0.75. With 10k seeds the measured rate hovers at 0.75
+    // ± ~1σ (~0.0043). Ceiling 0.76 absorbs that variance without losing the
+    // clamp's intent. If you tighten this, expect occasional flakes.
     const me = bey({ id: 'me', stat_attack: 100, stat_defense: 100, stat_stamina: 100, type: 'attack' });
     const opp = bey({ id: 'opp', stat_attack: 10, stat_defense: 10, stat_stamina: 10, type: 'attack' });
     const rate = winRate(me, opp);
-    expect(rate).toBeLessThanOrEqual(0.75);
-    expect(rate).toBeGreaterThanOrEqual(0.70);
+    expect(rate).toBeLessThanOrEqual(0.76);
+    expect(rate).toBeGreaterThanOrEqual(0.72);
   });
 
   it('determinism: same seed twice = identical outcome', () => {
@@ -309,7 +312,7 @@ Expected: stat-tilt tests fail with `Error: resolveBattle not implemented`. The 
 Replace the stub in `src/lib/labEngine.ts`:
 
 ```ts
-const STAT_PER_POINT = 0.004;
+const STAT_PER_POINT = 0.005;  // 30-point single-stat advantage caps at ±0.15
 const STAT_CAP = 0.15;
 const ODDS_FLOOR = 0.25;
 const ODDS_CEIL = 0.75;

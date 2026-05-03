@@ -24,7 +24,7 @@ import type { Bey } from './types';
 export type LabBeyType = 'attack' | 'defense' | 'stamina' | 'balance';
 
 export type OpponentKind =
-  | { kind: 'wild' }
+  | { kind: 'wild'; beyId?: string }              // beyId set when "Bey bestimmen"
   | { kind: 'trainer'; trainerId: string }
   | { kind: 'crew'; kidId: string };
 

@@ -163,17 +163,7 @@ export function LabPickerOpponent({ open, onPick, onClose }: Props) {
       <LabPickerBey
         open={chooseBeyOpen}
         onPick={(beyId) => {
-          // "Bey bestimmen" semantically becomes a wild fight against a specific bey.
-          // We encode this by reusing the 'wild' kind and stashing the chosen id
-          // in the calling component's draft (LabTab will track this). For the
-          // engine's purposes a chosen wild bey is just a bey — see LabTab Task 14.
-          onPick({ kind: 'wild' }, 'Bey gewählt');
-          // The chosen beyId is conveyed back via the same callback path; LabTab
-          // will read it via a separate prop in the next iteration. For v1
-          // simplicity, we store it on window.__labChosenOppBey — this is replaced
-          // with proper prop drilling in Task 14 (LabTab integration). Documented
-          // as a temporary bridge.
-          (window as unknown as { __labChosenOppBey?: string }).__labChosenOppBey = beyId;
+          onPick({ kind: 'wild', beyId }, 'Bey gewählt');
           setChooseBeyOpen(false);
         }}
         onClose={() => setChooseBeyOpen(false)}
